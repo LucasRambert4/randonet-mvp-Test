@@ -16,11 +16,9 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/LucasRambert4/YearProject.git
-cd YearProject
+git clone https://github.com/LucasRambert4/randonet-mvp-Test.git
+cd randonet-mvp-Test
 ```
-
-> ✅ _If your actual GitHub repo is still `randonet-mvp`, switch the link back._
 
 ### 2. Install Dependencies
 
