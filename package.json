@@ -1,0 +1,46 @@
+{
+  "name": "randonet-mvp",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-navigation/bottom-tabs": "^7.3.14",
+    "@react-navigation/drawer": "^7.4.1",
+    "@react-navigation/native": "^7.1.10",
+    "@react-navigation/native-stack": "^7.3.14",
+    "@react-navigation/stack": "^7.3.3",
+    "@supabase/supabase-js": "^2.50.0",
+    "@types/react": "~19.0.10",
+    "expo": "^53.0.0",
+    "expo-audio": "~0.4.6",
+    "expo-av": "~15.1.6",
+    "expo-image-picker": "~16.1.4",
+    "expo-location": "~18.1.5",
+    "expo-status-bar": "~2.2.3",
+    "haversine": "^1.1.1",
+    "mime": "^4.0.7",
+    "react": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-maps": "1.20.1",
+    "react-native-modal": "^14.0.0-rc.1",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "react-native-sound": "^0.11.2",
+    "react-native-vector-icons": "^10.2.0",
+    "typescript": "~5.8.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@types/react-native-vector-icons": "^6.4.18"
+  },
+  "private": true
+}
