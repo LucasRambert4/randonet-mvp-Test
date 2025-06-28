@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import SOSModalTrigger from '../SOS/SOSModalTrigger';
 import { useAuth } from '../../context/AuthContext';
+import styles from './CustomDrawerContent.styles';
 
 export default function CustomDrawerContent(props: any) {
+  const [modalVisible, setModalVisible] = useState(false);
   const { user } = useAuth();
 
   return (
@@ -34,27 +38,52 @@ export default function CustomDrawerContent(props: any) {
         </View>
       </View>
 
-      {/* Menu Items */}
+      {/* Drawer Items */}
       <DrawerItem
         label="Mes Itinéraires"
         onPress={() => props.navigation.navigate('MyRoutes')}
         labelStyle={styles.drawerLabel}
-        icon={() => <Text style={styles.icon}>🧭</Text>}
-      />
-      <DrawerItem
-        label="Compte"
-        onPress={() => props.navigation.navigate('Account')}
-        labelStyle={styles.drawerLabel}
-        icon={() => <Text style={styles.icon}>⚙️</Text>}
+        icon={({ size }) => (
+          <Ionicons
+            name="map-outline"
+            size={size}
+            color="white"
+            style={{ marginRight: 10 }}
+          />
+        )}
       />
       <DrawerItem
         label="Préférences et confidentialité"
         onPress={() => props.navigation.navigate('Privacy')}
         labelStyle={styles.drawerLabel}
-        icon={() => <Text style={styles.icon}>👤</Text>}
+        icon={({ size }) => (
+          <Ionicons
+            name="person-outline"
+            size={size}
+            color="white"
+            style={{ marginRight: 10 }}
+          />
+        )}
+      />
+      <DrawerItem
+        label="SOS"
+        labelStyle={{ ...styles.drawerLabel, color: 'red' }}
+        onPress={() => setModalVisible(true)}
+        icon={({ size }) => (
+          <Ionicons
+            name="alert-circle-outline"
+            size={size}
+            color="red"
+            style={{ marginRight: 10 }}
+          />
+        )}
+      />
+
+      <SOSModalTrigger
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        onComplete={() => setModalVisible(false)}
       />
     </DrawerContentScrollView>
   );
 }
-
-import styles from './CustomDrawerContent.styles';

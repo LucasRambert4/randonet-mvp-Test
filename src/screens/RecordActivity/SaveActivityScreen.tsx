@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../../supabase-config';
 import * as FileSystem from 'expo-file-system';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function SaveActivityScreen() {
   const navigation = useNavigation();
@@ -27,6 +28,7 @@ export default function SaveActivityScreen() {
     existingData?: any;
   };
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -48,7 +50,11 @@ export default function SaveActivityScreen() {
   }, []);
 
   const save = async () => {
-    if (!user) return Alert.alert('Error', 'Not logged in');
+    if (!user)
+      return Alert.alert(
+        t('saveActivity.errorTitle'),
+        t('saveActivity.errorNotLoggedIn')
+      );
 
     try {
       const filename = routeParams.activityId || `${Date.now()}.json`;
@@ -87,46 +93,45 @@ export default function SaveActivityScreen() {
         .from('activities')
         .upload(
           path,
-          {
-            uri: fileUri,
-            type: 'application/json',
-            name: filename,
-          } as any,
-          {
-            upsert: true,
-            contentType: 'application/json',
-          }
+          { uri: fileUri, type: 'application/json', name: filename } as any,
+          { upsert: true, contentType: 'application/json' }
         );
 
       if (uploadError) throw uploadError;
 
-      Alert.alert('Success', 'Activity saved!');
+      Alert.alert(
+        t('saveActivity.successTitle'),
+        t('saveActivity.successMessage')
+      );
       navigation.goBack();
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Failed to save activity');
+      Alert.alert(
+        t('saveActivity.errorTitle'),
+        err.message || t('saveActivity.errorSaveFailed')
+      );
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.label}>Title</Text>
+      <Text style={styles.label}>{t('saveActivity.labelTitle')}</Text>
       <TextInput
-        placeholder="Activity Title"
+        placeholder={t('saveActivity.placeholderTitle')}
         style={styles.input}
         value={title}
         onChangeText={setTitle}
       />
 
-      <Text style={styles.label}>Description</Text>
+      <Text style={styles.label}>{t('saveActivity.labelDescription')}</Text>
       <TextInput
-        placeholder="Write a description"
+        placeholder={t('saveActivity.placeholderDescription')}
         style={[styles.input, styles.multiline]}
         value={description}
         onChangeText={setDescription}
         multiline
       />
 
-      <Text style={styles.label}>Rating</Text>
+      <Text style={styles.label}>{t('saveActivity.labelRating')}</Text>
       <View style={styles.row}>
         {[1, 2, 3].map((i) => (
           <TouchableOpacity key={i} onPress={() => setRating(i)}>
@@ -139,42 +144,50 @@ export default function SaveActivityScreen() {
         ))}
       </View>
 
-      <Text style={styles.label}>Type</Text>
+      <Text style={styles.label}>{t('saveActivity.labelType')}</Text>
       <View style={styles.row}>
-        {['running', 'hiking', 'biking'].map((t) => (
+        {(['running', 'hiking', 'biking'] as const).map((tpe) => (
           <TouchableOpacity
-            key={t}
-            onPress={() => setType(t as any)}
-            style={[styles.chip, type === t && styles.activeChip]}
+            key={tpe}
+            onPress={() => setType(tpe)}
+            style={[styles.chip, type === tpe && styles.activeChip]}
           >
-            <Text style={styles.chipText}>{t}</Text>
+            <Text style={styles.chipText}>{t(`saveActivity.type${tpe}`)}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <Text style={styles.label}>Difficulty</Text>
+      <Text style={styles.label}>{t('saveActivity.labelDifficulty')}</Text>
       <View style={styles.row}>
-        {['easy', 'normal', 'hard'].map((d) => (
+        {(['easy', 'normal', 'hard'] as const).map((d) => (
           <TouchableOpacity
             key={d}
-            onPress={() => setDifficulty(d as any)}
+            onPress={() => setDifficulty(d)}
             style={[styles.chip, difficulty === d && styles.activeChip]}
           >
-            <Text style={styles.chipText}>{d}</Text>
+            <Text style={styles.chipText}>
+              {t(
+                `saveActivity.difficulty${
+                  d.charAt(0).toUpperCase() + d.slice(1)
+                }`
+              )}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <Text style={styles.label}>Location</Text>
-      <Text style={styles.readOnlyText}>{routeParams.location || '—'}</Text>
+      <Text style={styles.label}>{t('saveActivity.labelLocation')}</Text>
+      <Text style={styles.readOnlyText}>
+        {routeParams.location || t('saveActivity.empty')}
+      </Text>
 
-      <Text style={styles.label}>Elevation Gain (m)</Text>
+      <Text style={styles.label}>{t('saveActivity.labelElevation')}</Text>
       <Text style={styles.readOnlyText}>
         {Math.round(routeParams.elevation || 0)} m
       </Text>
 
       <TouchableOpacity onPress={save} style={styles.saveBtn}>
-        <Text style={styles.saveText}>Save Activity</Text>
+        <Text style={styles.saveText}>{t('saveActivity.buttonSave')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

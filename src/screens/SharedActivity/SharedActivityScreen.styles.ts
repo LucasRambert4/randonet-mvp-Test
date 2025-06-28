@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0d3a27',
+    paddingBottom: 0,
   },
   topBar: {
     flexDirection: 'row',
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#09341f',
     marginHorizontal: 10,
     marginTop: 10,
+    marginBottom: 10,
     padding: 12,
     borderRadius: 8,
   },
@@ -60,6 +62,33 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopWidth: 0.5,
     borderTopColor: '#ccc',
+  },
+  tabs: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: '#09341f',
+    borderRadius: 6,
+    padding: 5,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 6,
+  },
+  activeTabButton: {
+    backgroundColor: '#0d3a27',
+  },
+  tabText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  activeTab: {
+    color: '#00ffcc',
   },
 });
 

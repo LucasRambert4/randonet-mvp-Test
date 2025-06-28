@@ -20,12 +20,14 @@ import { Ionicons, MaterialIcons, Feather, Entypo } from '@expo/vector-icons';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { supabase } from '../../../supabase-config';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import styles from './ProfileScreen.styles';
 import mime from 'mime';
 
 export default function ProfileScreen() {
   const { user, setUserManually } = useAuth();
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState<
@@ -38,7 +40,10 @@ export default function ProfileScreen() {
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      Alert.alert('Erreur', 'Échec de la déconnexion.');
+      Alert.alert(
+        t('profile.logoutErrorTitle'),
+        t('profile.logoutErrorMessage')
+      );
     } else {
       setUserManually(null);
     }
@@ -65,29 +70,35 @@ export default function ProfileScreen() {
           data: { displayName: trimmed },
         });
         if (error) throw error;
-        Alert.alert('Succès', 'Nom mis à jour.');
+        Alert.alert(
+          t('profile.updateNameSuccessTitle'),
+          t('profile.updateNameSuccessMessage')
+        );
       } else if (modalType === 'email') {
         const { error } = await supabase.auth.updateUser({ email: trimmed });
         if (error) throw error;
         Alert.alert(
-          'Vérification requise',
-          `Un email a été envoyé à ${trimmed}. Veuillez confirmer pour finaliser.`
+          t('profile.updateEmailTitle'),
+          t('profile.updateEmailMessage', { email: trimmed })
         );
       } else if (modalType === 'password') {
         const { error } = await supabase.auth.updateUser({ password: trimmed });
         if (error) throw error;
 
         Alert.alert(
-          'Succès',
-          'Mot de passe mis à jour. Vous allez être déconnecté pour sécurité.'
+          t('profile.updatePasswordSuccessTitle'),
+          t('profile.updatePasswordSuccessMessage')
         );
 
         await supabase.auth.signOut();
         setUserManually(null);
         return;
       }
-    } catch (error: any) {
-      Alert.alert('Erreur', error.message || 'Une erreur est survenue.');
+    } catch (err: any) {
+      Alert.alert(
+        t('profile.deleteAccountErrorTitle'),
+        err.message || t('profile.deleteAccountErrorMessage')
+      );
     } finally {
       setModalVisible(false);
       setIsUpdating(false);
@@ -96,12 +107,12 @@ export default function ProfileScreen() {
 
   const handleDeleteAccount = async () => {
     Alert.alert(
-      'Supprimer le compte',
-      'Cette action est irréversible. Voulez-vous vraiment continuer ?',
+      t('profile.deleteAccountTitle'),
+      t('profile.deleteAccountMessage'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('profile.deleteAccountCancel'), style: 'cancel' },
         {
-          text: 'Supprimer',
+          text: t('profile.deleteAccountConfirm'),
           style: 'destructive',
           onPress: async () => {
             setIsUpdating(true);
@@ -120,13 +131,17 @@ export default function ProfileScreen() {
                 }
               );
 
-              if (!res.ok) throw new Error('Erreur de suppression');
+              if (!res.ok)
+                throw new Error(t('profile.deleteAccountErrorMessage'));
 
               await supabase.auth.signOut();
               setUserManually(null);
-              Alert.alert('Compte supprimé');
+              Alert.alert(t('profile.deleteAccountSuccess'));
             } catch (err: any) {
-              Alert.alert('Erreur', err.message || 'Échec de la suppression');
+              Alert.alert(
+                t('profile.deleteAccountErrorTitle'),
+                err.message || t('profile.deleteAccountErrorMessage')
+              );
             } finally {
               setIsUpdating(false);
             }
@@ -155,10 +170,8 @@ export default function ProfileScreen() {
         quality: 1,
       });
 
-      if (result.canceled || !result.assets || !result.assets[0]) return;
-
-      const asset = result.assets[0];
-      const uri = asset.uri;
+      if (result.canceled || !result.assets?.[0]) return;
+      const uri = result.assets[0].uri;
       const fileExt = uri.split('.').pop() || 'jpg';
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`;
@@ -167,41 +180,36 @@ export default function ProfileScreen() {
       const base64 = await FileSystem.readAsStringAsync(uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
-
       const fileBytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, fileBytes, {
-          contentType,
-          upsert: true,
-        });
-
+        .upload(filePath, fileBytes, { contentType, upsert: true });
       if (uploadError) throw uploadError;
 
       const { data: publicUrlData } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
-
       const publicUrl = publicUrlData.publicUrl;
 
       const { error: updateError } = await supabase.auth.updateUser({
-        data: {
-          avatar_url: publicUrl,
-        },
+        data: { avatar_url: publicUrl },
       });
-
       if (updateError) throw updateError;
 
-      const { data } = await supabase.auth.getUser();
-      if (data?.user) {
-        setUserManually(data.user);
-      }
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData?.user) setUserManually(userData.user);
 
-      Alert.alert('Succès', 'Photo de profil mise à jour.');
+      Alert.alert(
+        t('profile.updateNameSuccessTitle'),
+        t('profile.updateNameSuccessMessage')
+      );
     } catch (err: any) {
       console.error('Avatar upload failed:', err);
-      Alert.alert('Erreur', err.message || 'Échec du téléchargement');
+      Alert.alert(
+        t('profile.logoutErrorTitle'),
+        err.message || t('profile.logoutErrorMessage')
+      );
     }
   };
 
@@ -211,7 +219,7 @@ export default function ProfileScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.title}>Mon Profil</Text>
+        <Text style={styles.title}>{t('profile.title')}</Text>
         <TouchableOpacity
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         >
@@ -257,7 +265,7 @@ export default function ProfileScreen() {
             disabled={isUpdating}
           >
             <Feather name="image" size={22} color="white" />
-            <Text style={styles.itemText}>Changer la photo de profil</Text>
+            <Text style={styles.itemText}>{t('profile.uploadAvatar')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -266,7 +274,7 @@ export default function ProfileScreen() {
             disabled={isUpdating}
           >
             <Feather name="user" size={22} color="white" />
-            <Text style={styles.itemText}>Modifier le nom</Text>
+            <Text style={styles.itemText}>{t('profile.editName')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -275,7 +283,7 @@ export default function ProfileScreen() {
             disabled={isUpdating}
           >
             <Ionicons name="mail" size={22} color="white" />
-            <Text style={styles.itemText}>Changer l'adresse e-mail</Text>
+            <Text style={styles.itemText}>{t('profile.changeEmail')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -284,7 +292,7 @@ export default function ProfileScreen() {
             disabled={isUpdating}
           >
             <Entypo name="lock" size={22} color="white" />
-            <Text style={styles.itemText}>Modifier le mot de passe</Text>
+            <Text style={styles.itemText}>{t('profile.editPassword')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -294,7 +302,7 @@ export default function ProfileScreen() {
           >
             <Feather name="log-out" size={22} color="#ff4d4d" />
             <Text style={[styles.itemText, { color: '#ff4d4d' }]}>
-              Se déconnecter
+              {t('profile.logout')}
             </Text>
           </TouchableOpacity>
 
@@ -305,7 +313,7 @@ export default function ProfileScreen() {
           >
             <MaterialIcons name="delete" size={22} color="#ff4d4d" />
             <Text style={[styles.itemText, { color: '#ff4d4d' }]}>
-              Supprimer le compte
+              {t('profile.deleteAccount')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -323,13 +331,11 @@ export default function ProfileScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           >
             <Text style={styles.modalTitle}>
-              {
-                {
-                  name: 'Modifier le nom',
-                  email: 'Modifier l’e-mail',
-                  password: 'Modifier le mot de passe',
-                }[modalType]
-              }
+              {modalType === 'name'
+                ? t('profile.modalTitleName')
+                : modalType === 'email'
+                ? t('profile.modalTitleEmail')
+                : t('profile.modalTitlePassword')}
             </Text>
 
             <TextInput
@@ -337,11 +343,11 @@ export default function ProfileScreen() {
               value={modalValue}
               onChangeText={setModalValue}
               placeholder={
-                {
-                  name: 'Nouveau nom',
-                  email: 'Nouvelle adresse e-mail',
-                  password: 'Nouveau mot de passe',
-                }[modalType]
+                modalType === 'name'
+                  ? t('profile.modalPlaceholderName')
+                  : modalType === 'email'
+                  ? t('profile.modalPlaceholderEmail')
+                  : t('profile.modalPlaceholderPassword')
               }
               keyboardType={modalType === 'email' ? 'email-address' : 'default'}
               autoCapitalize="none"
@@ -355,7 +361,9 @@ export default function ProfileScreen() {
                 onPress={() => !isUpdating && setModalVisible(false)}
                 disabled={isUpdating}
               >
-                <Text style={styles.modalCancel}>Annuler</Text>
+                <Text style={styles.modalCancel}>
+                  {t('profile.modalCancel')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleModalConfirm}
@@ -364,7 +372,9 @@ export default function ProfileScreen() {
                 {isUpdating ? (
                   <ActivityIndicator color="white" />
                 ) : (
-                  <Text style={styles.modalConfirm}>Confirmer</Text>
+                  <Text style={styles.modalConfirm}>
+                    {t('profile.modalConfirm')}
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>

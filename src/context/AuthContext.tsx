@@ -27,13 +27,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get current session on load
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const fetchSession = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Erreur session:', error.message);
+      }
       setUser(session?.user || null);
       setLoading(false);
-    });
+    };
 
-    // Listen to auth state changes
+    fetchSession();
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -50,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUserManually, loading }}>
+    <AuthContext.Provider value={{ user, loading, setUserManually }}>
       {children}
     </AuthContext.Provider>
   );

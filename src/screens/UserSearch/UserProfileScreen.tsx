@@ -22,6 +22,8 @@ export default function UserProfileScreen() {
       <View style={styles.content}>
         <Image source={{ uri: user.avatar }} style={styles.avatar} />
         <Text style={styles.name}>{user.name}</Text>
+        {/* Placeholder for friend interaction buttons */}
+        <Text style={{ color: 'white', marginTop: 20 }}>Friend system in progress...</Text>
       </View>
     </SafeAreaView>
   );

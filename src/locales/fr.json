@@ -1,0 +1,208 @@
+{
+  "home": {
+    "title": "Bienvenue",
+    "searchPlaceholder": "Rechercher des utilisateurs..."
+  },
+  "common": {
+    "settings": "Paramètres",
+    "language": "Langue"
+  },
+  "privacy": {
+    "title": "Préférences et confidentialité",
+    "languageLabel": "Langue de l'application",
+    "locationLabel": "Localisation",
+    "notificationsLabel": "Notifications",
+    "inviteButton": "Inviter un contact"
+  },
+  "activityDetail": {
+    "title": "Détails de l’activité",
+    "shareMessage": "Découvrez une activité à {{location}} – {{km}} km en {{minutes}} min !",
+    "deleteTitle": "Supprimer l’activité",
+    "deleteConfirm": "Êtes-vous sûr ?",
+    "deletedMsg": "Activité supprimée",
+    "distance": "Distance",
+    "duration": "Durée",
+    "elevation": "Dénivelé",
+    "difficulty": "Difficulté",
+    "type": "Type",
+    "rating": "Note",
+    "description": "Description"
+  },
+  "trailDetail": {
+    "distance": "Distance",
+    "duration": "Durée",
+    "difficulty": "Difficulté",
+    "save": "Enregistrer le sentier",
+    "unsave": "Retirer le sentier"
+  },
+  "chatList": {
+    "title": "Communauté",
+    "searchPlaceholder": "Recherche…",
+    "tabChats": "Discussions",
+    "tabGroups": "Groupes"
+  },
+  "chatScreen": {
+    "messagePlaceholder": "Message…",
+    "send": "Envoyer"
+  },
+  "explore": {
+    "title": "Sentiers Île-de-France",
+    "searchPlaceholder": "Rechercher…",
+    "filterDifficulty": "Difficulté",
+    "sortBy": "Trier par",
+    "asc": "▲ Croissant",
+    "desc": "▼ Décroissant",
+    "viewDetails": "Voir les détails",
+    "unknown": "Inconnu",
+    "difficultyEasy": "Facile",
+    "difficultyModerate": "Moyen",
+    "difficultyDifficult": "Difficile",
+    "sortName": "Nom",
+    "sortDistance": "Distance",
+    "sortDuration": "Durée",
+    "trailDetail": "{{km}} km • {{min}} min • {{diff}}",
+    "empty": "Aucun sentier ne correspond.",
+    "errorLoad": "Impossible de charger les sentiers."
+  },
+  "loader": {
+    "title": "Hike",
+    "subtitle": "Une randonnée intelligente, sécurisée et solidaire"
+  },
+  "login": {
+    "signupTitle": "Créer un compte",
+    "loginTitle": "Se connecter",
+    "displayName": "Nom d\u0027utilisateur",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "signupButton": "Créer le compte",
+    "loginButton": "Se connecter",
+    "haveAccount": "J'ai déjà un compte",
+    "noAccount": "Créer un nouveau compte",
+    "errorTitle": "Erreur",
+    "errorCredentials": "Email et mot de passe requis.",
+    "errorAllFields": "Tous les champs sont requis.",
+    "errorPasswordMatch": "Les mots de passe ne correspondent pas.",
+    "loginErrorTitle": "Erreur de connexion",
+    "signupErrorTitle": "Erreur à l’inscription",
+    "signupSuccess": "Inscription réussie !"
+  },
+  "myRoutes": {
+    "title": "Mes itinéraires",
+    "searchPlaceholder": "Rechercher…",
+    "tabCompleted": "Terminés",
+    "tabSaved": "Enregistrés",
+    "errorLoad": "Échec du chargement des activités.",
+    "elevationLabel": "Dénivelé",
+    "activityDefault": "Randonnée",
+    "difficultyLabel": "Difficulté"
+  },
+  "profile": {
+    "title": "Mon profil",
+    "uploadAvatar": "Changer la photo de profil",
+    "editName": "Modifier le nom",
+    "changeEmail": "Changer l'adresse e-mail",
+    "editPassword": "Modifier le mot de passe",
+    "logout": "Se déconnecter",
+    "deleteAccount": "Supprimer le compte",
+
+    "logoutErrorTitle": "Erreur",
+    "logoutErrorMessage": "Échec de la déconnexion.",
+
+    "updateNameSuccessTitle": "Succès",
+    "updateNameSuccessMessage": "Nom mis à jour.",
+
+    "updateEmailTitle": "Vérification requise",
+    "updateEmailMessage": "Un email a été envoyé à {{email}}. Veuillez confirmer pour finaliser.",
+
+    "updatePasswordSuccessTitle": "Succès",
+    "updatePasswordSuccessMessage": "Mot de passe mis à jour. Vous allez être déconnecté pour sécurité.",
+
+    "deleteAccountTitle": "Supprimer le compte",
+    "deleteAccountMessage": "Cette action est irréversible. Voulez-vous continuer ?",
+    "deleteAccountCancel": "Annuler",
+    "deleteAccountConfirm": "Supprimer",
+    "deleteAccountSuccess": "Compte supprimé",
+    "deleteAccountErrorTitle": "Erreur",
+    "deleteAccountErrorMessage": "Échec de la suppression du compte.",
+
+    "modalTitleName": "Modifier le nom",
+    "modalTitleEmail": "Modifier l’e-mail",
+    "modalTitlePassword": "Modifier le mot de passe",
+
+    "modalPlaceholderName": "Nouveau nom",
+    "modalPlaceholderEmail": "Nouvelle adresse e-mail",
+    "modalPlaceholderPassword": "Nouveau mot de passe",
+
+    "modalCancel": "Annuler",
+    "modalConfirm": "Confirmer"
+  },
+  "shared": {
+    "title": "Accueil",
+    "searchPlaceholder": "Recherche…",
+    "tabAll": "Tout",
+    "tabUser": "Utilisateur",
+    "tabFriends": "Amis",
+    "errorTitle": "Erreur",
+    "errorLoad": "Impossible de charger les activités",
+    "usernameDefault": "Utilisateur",
+    "unknown": "Inconnu",
+    "labelActivity": "Activité",
+    "labelDifficulty": "Difficulté",
+    "shareMessage": "Activité de {{username}} à {{location}} : {{distance}}, {{duration}}"
+  },
+  "profileDrawer": {
+    "usernameDefault": "Utilisateur",
+    "viewProfile": "Voir le profil",
+    "tabRoutes": "Mes itinéraires",
+    "tabPrivacy": "Préférences et confidentialité"
+  },
+  "record": {
+    "permissionNeeded": "Permission requise",
+    "permissionRequired": "La permission de localisation est nécessaire.",
+    "markerStart": "Départ",
+    "markerCurrent": "En cours",
+    "labelDistance": "Distance",
+    "labelDuration": "Durée",
+    "labelSpeed": "Vitesse",
+    "start": "Démarrer",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "end": "Terminer",
+    "dismiss": "Annuler"
+  },
+  "saveActivity": {
+    "errorTitle": "Erreur",
+    "errorNotLoggedIn": "Non connecté",
+    "successTitle": "Succès",
+    "successMessage": "Activité enregistrée !",
+    "errorSaveFailed": "Échec de l’enregistrement",
+
+    "labelTitle": "Titre",
+    "placeholderTitle": "Titre de l’activité",
+    "labelDescription": "Description",
+    "placeholderDescription": "Écrire une description",
+    "labelRating": "Note",
+    "labelType": "Type",
+    "typerunning": "Course",
+    "typehiking": "Randonnée",
+    "typebiking": "Vélo",
+    "labelDifficulty": "Difficulté",
+    "difficultyeasy": "Facile",
+    "difficultynormal": "Normal",
+    "difficultyhard": "Difficile",
+    "labelLocation": "Emplacement",
+    "labelElevation": "Dénivelé (m)",
+    "buttonSave": "Enregistrer",
+    "empty": "—"
+  },
+  "userSearch": {
+    "searchPlaceholder": "Rechercher des utilisateurs…",
+    "noUsers": "Aucun utilisateur trouvé.",
+    "accept": "Accepter",
+    "reject": "Refuser",
+    "pending": "En attente",
+    "friend": "Ami",
+    "add": "Ajouter"
+  }
+}

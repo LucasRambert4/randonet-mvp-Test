@@ -1,30 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
 
 import { useAuth } from '../../context/AuthContext';
 
-import HomeScreen from '../../screens/Home/HomeScreen';
+// Screens
+import HomeScreen from '../../screens/SharedActivity/SharedActivityScreen ';
 import ChatScreen from '../../screens/Chat/ChatScreen';
-import SavedScreen from '../../screens/Saved/SavedScreen';
+import ExploreScreen from '../../screens/Explore/ExploreScreen';
 import LoginScreen from '../../screens/Login/LoginScreen';
 import LoaderScreen from '../../screens/Loader/LoaderScreen';
 import ProfileScreen from '../../screens/Profile/ProfileScreen';
 import MyRoutesScreen from '../../screens/MyRoutes/MyRoutesScreen';
-import AccountScreen from '../../screens/Account/AccountScreen';
 import PrivacyScreen from '../../screens/Privacy/PrivacyScreen';
 import ActivityDetailScreen from '../../screens/ActivityDetail/ActivityDetailScreen';
 import UserSearchScreen from '../../screens/UserSearch/UserSearchScreen';
 import UserProfileScreen from '../../screens/UserSearch/UserProfileScreen';
 import RecordActivityScreen from '../../screens/RecordActivity/RecordActivityScreen';
 import SaveActivityScreen from '../../screens/RecordActivity/SaveActivityScreen';
+import TrailDetailsScreen from '../../screens/Explore/TrailDetailScreen';
 
 import CustomDrawerContent from '../../components/Drawer/CustomDrawerContent';
 import SOSModalTrigger from '../../components/SOS/SOSModalTrigger';
-
-import * as Location from 'expo-location';
 
 export type RootStackParamList = {
   MainApp: undefined;
@@ -38,9 +38,13 @@ export type RootStackParamList = {
     startTime: Date | null;
     endTime: Date;
   };
+  TrailDetails: { trail: any };
 };
 
 const HomeStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator();
 
 function HomeStackNavigator() {
   return (
@@ -51,12 +55,12 @@ function HomeStackNavigator() {
   );
 }
 
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator<RootStackParamList>();
-const Drawer = createDrawerNavigator();
+function DummyScreen() {
+  return null;
+}
 
 function MainTabs() {
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleComplete = () => {
     setModalVisible(false);
@@ -75,17 +79,17 @@ function MainTabs() {
         screenOptions={({ route }) => ({
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'gray',
-          tabBarLabelStyle: { fontSize: 12 },
+          tabBarLabelStyle: { fontSize: 12, marginBottom: 0 },
+          tabBarItemStyle: { paddingVertical: 5 },
           tabBarStyle: {
             backgroundColor: '#013220',
-            height: 110,
-            paddingTop: 5,
-            borderTopWidth: 0.5,
-            borderTopColor: 'transparent',
+            height: 115,
+            paddingBottom: 45,
+            borderTopWidth: 0,
           },
           headerShown: false,
           tabBarIcon: ({ color }) => {
-            let iconName: string;
+            let iconName;
             switch (route.name) {
               case 'Home':
                 iconName = 'home';
@@ -96,8 +100,8 @@ function MainTabs() {
               case 'Chat':
                 iconName = 'chatbox-ellipses';
                 break;
-              case 'Saved':
-                iconName = 'bookmark';
+              case 'Explore':
+                iconName = 'compass';
                 break;
               case 'SOS':
                 iconName = 'alert-circle';
@@ -105,20 +109,25 @@ function MainTabs() {
               default:
                 iconName = 'ellipse';
             }
-            return <Ionicons name={iconName as any} size={24} color={color} />;
+            return (
+              <Ionicons
+                name={iconName as any}
+                size={22}
+                color={color}
+                style={{ padding: 4, borderRadius: 22 }}
+              />
+            );
           },
         })}
       >
         <Tab.Screen name="Home" component={HomeStackNavigator} />
         <Tab.Screen name="Chat" component={ChatScreen} />
         <Tab.Screen name="Record" component={RecordActivityScreen} />
-        <Tab.Screen name="Saved" component={MyRoutesScreen} />
+        <Tab.Screen name="Explore" component={ExploreScreen} />
         <Tab.Screen
           name="SOS"
-          component={() => null}
-          options={{
-            tabBarLabel: 'SOS',
-          }}
+          component={DummyScreen}
+          options={{ tabBarLabel: 'SOS' }}
           listeners={{
             tabPress: (e) => {
               e.preventDefault();
@@ -140,7 +149,6 @@ function AppDrawer() {
       <Drawer.Screen name="HomeTabs" component={MainTabs} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="MyRoutes" component={MyRoutesScreen} />
-      <Drawer.Screen name="Account" component={AccountScreen} />
       <Drawer.Screen name="Privacy" component={PrivacyScreen} />
     </Drawer.Navigator>
   );
@@ -148,12 +156,10 @@ function AppDrawer() {
 
 export default function Navigation() {
   const { user, loading } = useAuth();
-  const [showLoader, setShowLoader] = React.useState(true);
+  const [showLoader, setShowLoader] = useState(true);
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 2000);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -171,6 +177,7 @@ export default function Navigation() {
           />
           <Stack.Screen name="UserSearch" component={UserSearchScreen} />
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+          <Stack.Screen name="TrailDetails" component={TrailDetailsScreen} />
         </>
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />

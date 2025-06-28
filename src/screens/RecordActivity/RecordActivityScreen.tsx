@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   Alert,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
 import haversine from 'haversine';
@@ -14,6 +18,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../navigation/index';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
+
+const { height } = Dimensions.get('window');
+const TAB_BAR_HEIGHT = 60; // adjust to your actual tab-bar height
 
 type NavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -21,8 +29,9 @@ type NavigationProp = NativeStackNavigationProp<
 >;
 
 export default function RecordActivityScreen() {
-  const { user } = useAuth();
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
+  const insets = useSafeAreaInsets();
 
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -30,12 +39,13 @@ export default function RecordActivityScreen() {
   const [location, setLocation] =
     useState<Location.LocationObjectCoords | null>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const [endTime, setEndTime] = useState<Date | null>(null);
   const [distance, setDistance] = useState(0);
   const [elevation, setElevation] = useState(0);
   const [placeName, setPlaceName] = useState('');
-  const [duration, setDuration] = useState(0); // Live duration in seconds
+  const [duration, setDuration] = useState(0);
+
   const watchId = useRef<Location.LocationSubscription | null>(null);
+  const prevAltitude = useRef<number | null>(null);
   const mapRef = useRef<MapView | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -43,7 +53,10 @@ export default function RecordActivityScreen() {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission needed', 'Location permission is required.');
+        Alert.alert(
+          t('record.permissionNeeded'),
+          t('record.permissionRequired')
+        );
       } else {
         const loc = await Location.getCurrentPositionAsync({});
         setLocation(loc.coords);
@@ -52,8 +65,6 @@ export default function RecordActivityScreen() {
           latitudeDelta: 0.001,
           longitudeDelta: 0.001,
         });
-
-        // Reverse geocode
         const placemarks = await Location.reverseGeocodeAsync(loc.coords);
         if (placemarks.length > 0) {
           setPlaceName(
@@ -62,24 +73,19 @@ export default function RecordActivityScreen() {
         }
       }
     })();
-
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
 
-  // Update duration every second while recording
   useEffect(() => {
     if (recording && !paused && startTime) {
       intervalRef.current = setInterval(() => {
-        setDuration(
-          Math.floor((new Date().getTime() - startTime.getTime()) / 1000)
-        );
+        setDuration(Math.floor((Date.now() - startTime.getTime()) / 1000));
       }, 1000);
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
-
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
@@ -93,8 +99,6 @@ export default function RecordActivityScreen() {
     setElevation(0);
     setDuration(0);
     setStartTime(new Date());
-    setEndTime(null);
-
     watchId.current = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.Highest,
@@ -105,8 +109,13 @@ export default function RecordActivityScreen() {
         if (!paused) {
           const coords = loc.coords;
           setLocation(coords);
-          setElevation((prev) => Math.max(prev, coords.altitude || 0));
-
+          if (
+            prevAltitude.current !== null &&
+            coords.altitude > prevAltitude.current + 3
+          ) {
+            setElevation((e) => e + (coords.altitude - prevAltitude.current));
+          }
+          prevAltitude.current = coords.altitude;
           setRoute((prev) => {
             const newRoute = [...prev, coords];
             if (newRoute.length >= 2) {
@@ -118,7 +127,6 @@ export default function RecordActivityScreen() {
             }
             return newRoute;
           });
-
           mapRef.current?.animateToRegion({
             ...coords,
             latitudeDelta: 0.001,
@@ -132,15 +140,11 @@ export default function RecordActivityScreen() {
   const pauseOrResume = () => setPaused((p) => !p);
 
   const stopRecording = () => {
-    if (watchId.current) {
-      watchId.current.remove();
-      watchId.current = null;
-    }
+    if (watchId.current) watchId.current.remove();
     if (intervalRef.current) clearInterval(intervalRef.current);
     const finalEndTime = new Date();
     setRecording(false);
     setPaused(false);
-    setEndTime(finalEndTime);
     setDuration(
       Math.floor(
         (finalEndTime.getTime() -
@@ -148,7 +152,6 @@ export default function RecordActivityScreen() {
           1000
       )
     );
-
     navigation.navigate('SaveActivity', {
       route,
       distance,
@@ -160,10 +163,7 @@ export default function RecordActivityScreen() {
   };
 
   const dismissActivity = () => {
-    if (watchId.current) {
-      watchId.current.remove();
-      watchId.current = null;
-    }
+    if (watchId.current) watchId.current.remove();
     if (intervalRef.current) clearInterval(intervalRef.current);
     setRecording(false);
     setPaused(false);
@@ -171,7 +171,6 @@ export default function RecordActivityScreen() {
     setDistance(0);
     setDuration(0);
     setStartTime(null);
-    setEndTime(null);
     setElevation(0);
     setPlaceName('');
   };
@@ -195,7 +194,13 @@ export default function RecordActivityScreen() {
   const speed = duration > 0 ? distance / duration : 0;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { paddingBottom: insets.bottom + TAB_BAR_HEIGHT },
+      ]}
+      edges={['top']}
+    >
       <MapView
         provider={PROVIDER_GOOGLE}
         ref={(ref) => (mapRef.current = ref)}
@@ -206,28 +211,37 @@ export default function RecordActivityScreen() {
         {route.length > 0 && (
           <>
             <Polyline coordinates={route} strokeWidth={4} strokeColor="#00f" />
-            <Marker coordinate={route[0]} title="Start" />
-            <Marker coordinate={route[route.length - 1]} title="Current" />
+            <Marker coordinate={route[0]} title={t('record.markerStart')} />
+            <Marker
+              coordinate={route[route.length - 1]}
+              title={t('record.markerCurrent')}
+            />
           </>
         )}
       </MapView>
 
-      <TouchableOpacity style={styles.focusButton} onPress={centerMap}>
+      <TouchableOpacity
+        style={[
+          styles.focusButton,
+          { bottom: height * 0.34 + insets.bottom + 16 },
+        ]}
+        onPress={centerMap}
+      >
         <Text style={styles.focusButtonText}>🎯</Text>
       </TouchableOpacity>
 
       <View style={styles.infoPanel}>
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
-            <Text style={styles.label}>Distance</Text>
+            <Text style={styles.label}>{t('record.labelDistance')}</Text>
             <Text style={styles.value}>{Math.round(distance)} m</Text>
           </View>
           <View style={styles.infoItem}>
-            <Text style={styles.label}>Duration</Text>
+            <Text style={styles.label}>{t('record.labelDuration')}</Text>
             <Text style={styles.value}>{formatDuration(duration)}</Text>
           </View>
           <View style={styles.infoItem}>
-            <Text style={styles.label}>Speed</Text>
+            <Text style={styles.label}>{t('record.labelSpeed')}</Text>
             <Text style={styles.value}>{speed.toFixed(1)} m/s</Text>
           </View>
         </View>
@@ -238,45 +252,47 @@ export default function RecordActivityScreen() {
             onPress={recording ? pauseOrResume : startRecording}
           >
             <Text style={styles.buttonText}>
-              {recording ? (paused ? 'Resume' : 'Pause') : 'Start'}
+              {recording
+                ? paused
+                  ? t('record.resume')
+                  : t('record.pause')
+                : t('record.start')}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.buttonRed} onPress={stopRecording}>
-            <Text style={styles.buttonText}>End</Text>
+            <Text style={styles.buttonText}>{t('record.end')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.buttonGray} onPress={dismissActivity}>
-            <Text style={styles.buttonText}>Dismiss</Text>
+            <Text style={styles.buttonText}>{t('record.dismiss')}</Text>
           </TouchableOpacity>
-
-          <View style={styles.buttonPlaceholder} />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
-
-const { height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#013220',
+    backgroundColor: '#0d3a27',
   },
   map: {
+    width: '100%',
     height: height * 0.66,
   },
   infoPanel: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#013220',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    backgroundColor: '#09341f',
     justifyContent: 'space-between',
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   infoItem: {
     alignItems: 'center',
@@ -286,21 +302,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   value: {
-    color: 'white',
+    color: '#fff',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   buttonGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    gap: 10,
   },
   buttonGreen: {
     backgroundColor: '#2ecc71',
     width: '48%',
     paddingVertical: 14,
     borderRadius: 25,
-    marginBottom: 10,
     alignItems: 'center',
   },
   buttonRed: {
@@ -308,7 +324,6 @@ const styles = StyleSheet.create({
     width: '48%',
     paddingVertical: 14,
     borderRadius: 25,
-    marginBottom: 10,
     alignItems: 'center',
   },
   buttonGray: {
@@ -316,26 +331,20 @@ const styles = StyleSheet.create({
     width: '48%',
     paddingVertical: 14,
     borderRadius: 25,
-    marginBottom: 10,
     alignItems: 'center',
   },
-  buttonPlaceholder: {
-    width: '48%',
-    marginBottom: 10,
-  },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: '#fff',
+    fontWeight: '600',
     fontSize: 16,
   },
   focusButton: {
     position: 'absolute',
-    bottom: height * 0.34 + 20,
-    right: 20,
+    right: 24,
     backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 20,
-    zIndex: 999,
+    padding: 12,
+    borderRadius: 24,
+    zIndex: 10,
   },
   focusButtonText: {
     fontSize: 20,

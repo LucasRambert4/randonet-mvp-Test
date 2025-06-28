@@ -1,0 +1,214 @@
+{
+  "home": {
+    "title": "Welcome",
+    "searchPlaceholder": "Search users..."
+  },
+  "common": {
+    "settings": "Settings",
+    "language": "Language",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "deleted": "Supprimé",
+    "user": "Utilisateur",
+    "unknown": "Inconnu",
+    "minutes": "min"
+  },
+  "privacy": {
+    "title": "Preferences & Privacy",
+    "languageLabel": "App Language",
+    "locationLabel": "Location",
+    "notificationsLabel": "Notifications",
+    "inviteButton": "Invite a contact"
+  },
+  "activityDetail": {
+    "title": "Activity Detail",
+    "shareMessage": "Check out an activity in {{location}} – {{km}} km over {{minutes}} min!",
+    "deleteTitle": "Delete Activity",
+    "deleteConfirm": "Are you sure?",
+    "deletedMsg": "Activity removed",
+    "distance": "Distance",
+    "duration": "Duration",
+    "elevation": "Elevation",
+    "difficulty": "Difficulty",
+    "type": "Type",
+    "rating": "Rating",
+    "description": "Description"
+  },
+  "trailDetail": {
+    "distance": "Distance",
+    "duration": "Duration",
+    "difficulty": "Difficulty",
+    "save": "Save Trail",
+    "unsave": "Unsave Trail"
+  },
+  "chatList": {
+    "title": "Community",
+    "searchPlaceholder": "Search...",
+    "tabChats": "Chats",
+    "tabGroups": "Groups"
+  },
+  "chatScreen": {
+    "messagePlaceholder": "Message...",
+    "send": "Send"
+  },
+  "explore": {
+    "title": "Île-de-France Trails",
+    "searchPlaceholder": "Search trails...",
+    "filterDifficulty": "Difficulty",
+    "sortBy": "Sort By",
+    "asc": "▲ Asc",
+    "desc": "▼ Desc",
+    "viewDetails": "View Trail Details",
+    "unknown": "Unknown",
+    "difficultyEasy": "Easy",
+    "difficultyModerate": "Moderate",
+    "difficultyDifficult": "Difficult",
+    "sortName": "Name",
+    "sortDistance": "Distance",
+    "sortDuration": "Duration",
+    "trailDetail": "{{km}} km • {{min}} min • {{diff}}",
+    "empty": "No trails match your filters.",
+    "errorLoad": "Could not load trails."
+  },
+  "loader": {
+    "title": "Hike",
+    "subtitle": "Smarter, Safer, Together"
+  },
+  "login": {
+    "signupTitle": "Create an Account",
+    "loginTitle": "Log In",
+    "displayName": "Display Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "signupButton": "Sign Up",
+    "loginButton": "Log In",
+    "haveAccount": "I already have an account",
+    "noAccount": "Create a new account",
+    "errorTitle": "Error",
+    "errorCredentials": "Email and password are required.",
+    "errorAllFields": "All fields are required.",
+    "errorPasswordMatch": "Passwords do not match.",
+    "loginErrorTitle": "Login Error",
+    "signupErrorTitle": "Signup Error",
+    "signupSuccess": "Signup successful!"
+  },
+  "myRoutes": {
+    "title": "My Routes",
+    "searchPlaceholder": "Search routes...",
+    "tabCompleted": "Completed",
+    "tabSaved": "Saved",
+    "errorLoad": "Failed to load activities.",
+    "elevationLabel": "Elevation",
+    "difficultyLabel": "Difficulty",
+    "activityDefault": "Hike"
+  },
+  "profile": {
+    "title": "My Profile",
+    "uploadAvatar": "Change Profile Photo",
+    "editName": "Edit Name",
+    "changeEmail": "Change Email Address",
+    "editPassword": "Change Password",
+    "logout": "Log Out",
+    "deleteAccount": "Delete Account",
+
+    "logoutErrorTitle": "Error",
+    "logoutErrorMessage": "Failed to log out.",
+
+    "updateNameSuccessTitle": "Success",
+    "updateNameSuccessMessage": "Name updated.",
+
+    "updateEmailTitle": "Verification Required",
+    "updateEmailMessage": "A confirmation email has been sent to {{email}}. Please confirm to complete.",
+
+    "updatePasswordSuccessTitle": "Success",
+    "updatePasswordSuccessMessage": "Password updated. You will be signed out for security.",
+
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountMessage": "This action is irreversible. Continue?",
+    "deleteAccountCancel": "Cancel",
+    "deleteAccountConfirm": "Delete",
+    "deleteAccountSuccess": "Account deleted",
+    "deleteAccountErrorTitle": "Error",
+    "deleteAccountErrorMessage": "Failed to delete account.",
+
+    "modalTitleName": "Edit Name",
+    "modalTitleEmail": "Change Email",
+    "modalTitlePassword": "Change Password",
+
+    "modalPlaceholderName": "New name",
+    "modalPlaceholderEmail": "New email address",
+    "modalPlaceholderPassword": "New password",
+
+    "modalCancel": "Cancel",
+    "modalConfirm": "Confirm"
+  },
+  "shared": {
+    "title": "Home",
+    "searchPlaceholder": "Search...",
+    "tabAll": "All",
+    "tabUser": "User",
+    "tabFriends": "Friends",
+    "errorTitle": "Error",
+    "errorLoad": "Unable to load activities",
+    "usernameDefault": "User",
+    "unknown": "Unknown",
+    "labelActivity": "Activity",
+    "labelDifficulty": "Difficulty",
+    "shareMessage": "{{username}}'s activity at {{location}}: {{distance}}, {{duration}}"
+  },
+  "profileDrawer": {
+    "usernameDefault": "User",
+    "viewProfile": "View Profile",
+    "tabRoutes": "My Routes",
+    "tabPrivacy": "Preferences & Privacy"
+  },
+  "record": {
+    "permissionNeeded": "Permission needed",
+    "permissionRequired": "Location permission is required.",
+    "markerStart": "Start",
+    "markerCurrent": "Current",
+    "labelDistance": "Distance",
+    "labelDuration": "Duration",
+    "labelSpeed": "Speed",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "end": "End",
+    "dismiss": "Dismiss"
+  },
+  "saveActivity": {
+    "errorTitle": "Error",
+    "errorNotLoggedIn": "Not logged in",
+    "successTitle": "Success",
+    "successMessage": "Activity saved!",
+    "errorSaveFailed": "Failed to save activity",
+
+    "labelTitle": "Title",
+    "placeholderTitle": "Activity Title",
+    "labelDescription": "Description",
+    "placeholderDescription": "Write a description",
+    "labelRating": "Rating",
+    "labelType": "Type",
+    "typerunning": "Running",
+    "typehiking": "Hiking",
+    "typebiking": "Biking",
+    "labelDifficulty": "Difficulty",
+    "difficultyeasy": "Easy",
+    "difficultynormal": "Normal",
+    "difficultyhard": "Hard",
+    "labelLocation": "Location",
+    "labelElevation": "Elevation Gain (m)",
+    "buttonSave": "Save Activity",
+    "empty": "—"
+  },
+  "userSearch": {
+    "searchPlaceholder": "Search users...",
+    "noUsers": "No users found.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "pending": "Pending",
+    "friend": "Friend",
+    "add": "Add"
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,36 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function PrivacyScreen() {
   const { user } = useAuth();
   const navigation = useNavigation();
-  const [language, setLanguage] = useState<'EN' | 'FR'>('FR');
+  const { t, i18n } = useTranslation();
+
+  // local toggles
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  // we'll derive a two-letter badge ("EN" or "FR") from resolvedLanguage,
+  // and re-run whenever the user actually changes language.
+  const [badgeLang, setBadgeLang] = useState<'EN' | 'FR'>(
+    i18n.resolvedLanguage.startsWith('fr') ? 'FR' : 'EN'
+  );
+
+  useEffect(() => {
+    const onLanguageChanged = (lng: string) => {
+      setBadgeLang(lng.startsWith('fr') ? 'FR' : 'EN');
+    };
+    i18n.on('languageChanged', onLanguageChanged);
+    return () => {
+      i18n.off('languageChanged', onLanguageChanged);
+    };
+  }, [i18n]);
+
+  const switchLanguage = (lng: 'en' | 'fr') => {
+    i18n.changeLanguage(lng);
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -26,7 +49,7 @@ export default function PrivacyScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.title}>Préférences et confidentialité</Text>
+        <Text style={styles.title}>{t('privacy.title')}</Text>
         <TouchableOpacity
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         >
@@ -41,20 +64,21 @@ export default function PrivacyScreen() {
 
       {/* Body */}
       <View style={styles.section}>
+        {/* Language */}
         <View style={styles.row}>
-          <Text style={styles.label}>Langue de l'application</Text>
+          <Text style={styles.label}>{t('privacy.languageLabel')}</Text>
           <View style={styles.languageToggle}>
             <TouchableOpacity
               style={[
                 styles.langButton,
-                language === 'EN' && styles.langSelected,
+                badgeLang === 'EN' && styles.langSelected,
               ]}
-              onPress={() => setLanguage('EN')}
+              onPress={() => switchLanguage('en')}
             >
               <Text
                 style={[
                   styles.langText,
-                  language === 'EN' && styles.langSelectedText,
+                  badgeLang === 'EN' && styles.langSelectedText,
                 ]}
               >
                 EN
@@ -63,14 +87,14 @@ export default function PrivacyScreen() {
             <TouchableOpacity
               style={[
                 styles.langButton,
-                language === 'FR' && styles.langSelected,
+                badgeLang === 'FR' && styles.langSelected,
               ]}
-              onPress={() => setLanguage('FR')}
+              onPress={() => switchLanguage('fr')}
             >
               <Text
                 style={[
                   styles.langText,
-                  language === 'FR' && styles.langSelectedText,
+                  badgeLang === 'FR' && styles.langSelectedText,
                 ]}
               >
                 FR
@@ -79,8 +103,9 @@ export default function PrivacyScreen() {
           </View>
         </View>
 
+        {/* Location */}
         <View style={styles.row}>
-          <Text style={styles.label}>Localisation</Text>
+          <Text style={styles.label}>{t('privacy.locationLabel')}</Text>
           <Switch
             value={locationEnabled}
             onValueChange={setLocationEnabled}
@@ -89,8 +114,9 @@ export default function PrivacyScreen() {
           />
         </View>
 
+        {/* Notifications */}
         <View style={styles.row}>
-          <Text style={styles.label}>Notifications</Text>
+          <Text style={styles.label}>{t('privacy.notificationsLabel')}</Text>
           <Switch
             value={notificationsEnabled}
             onValueChange={setNotificationsEnabled}
@@ -99,8 +125,9 @@ export default function PrivacyScreen() {
           />
         </View>
 
+        {/* Invite */}
         <TouchableOpacity style={styles.inviteButton}>
-          <Text style={styles.inviteText}>Inviter un contact</Text>
+          <Text style={styles.inviteText}>{t('privacy.inviteButton')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

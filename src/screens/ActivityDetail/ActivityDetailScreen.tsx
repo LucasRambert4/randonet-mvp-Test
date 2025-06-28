@@ -19,6 +19,7 @@ import {
 import MapView, { Polyline } from 'react-native-maps';
 import { supabase } from '../../../supabase-config';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import styles from './ActivityDetailScreen.styles';
 
 export default function ActivityDetailScreen() {
@@ -28,25 +29,67 @@ export default function ActivityDetailScreen() {
   const { activityId } = route.params as { activityId: string };
   const [activityData, setActivityData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ownerInfo, setOwnerInfo] = useState<any | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const { t, i18n } = useTranslation();
+  const loc = i18n.resolvedLanguage;
 
   const fetchActivity = async () => {
-    if (!user || !activityId) return;
+    if (!activityId) return;
     setLoading(true);
 
-    try {
-      const { data } = supabase.storage
-        .from('activities')
-        .getPublicUrl(`${user.id}/${activityId}`);
+    const [ownerId, filename] = activityId.split('/');
+    if (!ownerId || !filename) {
+      Alert.alert(t('errors.invalidActivity'));
+      setLoading(false);
+      return;
+    }
 
-      // 🔥 Cache-busting query string to force fresh fetch
-      const res = await fetch(`${data.publicUrl}?t=${Date.now()}`);
+    try {
+      const { data: publicData } = supabase.storage
+        .from('activities')
+        .getPublicUrl(`${ownerId}/${filename}`);
+
+      const res = await fetch(`${publicData.publicUrl}?t=${Date.now()}`);
       const json = await res.json();
       setActivityData(json);
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('display_name, avatar_url')
+        .eq('id', ownerId)
+        .single();
+      setOwnerInfo(profile);
+
+      const { data: savedRows } = await supabase
+        .from('saved_activities')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('activity_id', activityId);
+      setIsSaved(!!(savedRows && savedRows.length));
     } catch (err) {
       console.error('Failed to fetch activity:', err);
-      Alert.alert('Error', 'Could not load activity details.');
+      Alert.alert(t('errors.genericTitle'), t('errors.fetchActivity'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const toggleSave = async () => {
+    if (!user?.id || !activityId) return;
+    if (isSaved) {
+      await supabase
+        .from('saved_activities')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('activity_id', activityId);
+      setIsSaved(false);
+    } else {
+      await supabase
+        .from('saved_activities')
+        .insert([{ user_id: user.id, activity_id: activityId }]);
+      setIsSaved(true);
     }
   };
 
@@ -63,45 +106,52 @@ export default function ActivityDetailScreen() {
   const shareActivity = async () => {
     if (!activityData) return;
     try {
-      await Share.share({
-        message: `Check out my activity in ${activityData.location} – ${(
-          activityData.distance_meters / 1000
-        ).toFixed(1)} km over ${
-          Math.round(activityData.duration_seconds / 60) || 1
-        } min!`,
+      const message = t('activityDetail.shareMessage', {
+        location: activityData.location,
+        km: (activityData.distance_meters / 1000).toFixed(1),
+        minutes: Math.max(1, Math.round(activityData.duration_seconds / 60)),
       });
+      await Share.share({ message });
     } catch (error) {
       console.error('Error sharing:', error);
     }
   };
 
   const confirmDelete = () => {
-    Alert.alert('Delete Activity', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: deleteActivity,
-      },
-    ]);
+    Alert.alert(
+      t('activityDetail.deleteTitle'),
+      t('activityDetail.deleteConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: deleteActivity,
+        },
+      ]
+    );
   };
 
   const deleteActivity = async () => {
+    const [ownerId, filename] = activityId.split('/');
+    if (!ownerId || !filename) return;
+
     try {
       const { error } = await supabase.storage
         .from('activities')
-        .remove([`${user.id}/${activityId}`]);
-
+        .remove([`${ownerId}/${filename}`]);
       if (error) throw error;
-
-      Alert.alert('Deleted', 'Activity removed');
+      Alert.alert(t('common.deleted'), t('activityDetail.deletedMsg'));
       navigation.goBack();
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Could not delete');
+      Alert.alert(
+        t('errors.genericTitle'),
+        err.message || t('errors.deleteActivity')
+      );
     }
   };
 
-  if (loading || !activityData) {
+  if (loading || !activityData || !ownerInfo) {
     return (
       <SafeAreaView style={styles.container}>
         <ActivityIndicator
@@ -114,20 +164,19 @@ export default function ActivityDetailScreen() {
   }
 
   const routePath = activityData.path || [];
+  const [ownerId] = activityId.split('/');
+  const isOwner = ownerId === user.id;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Top Bar */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.title}>Activity Detail</Text>
+        <Text style={styles.title}>{t('activityDetail.title')}</Text>
         <Image
           source={{
-            uri:
-              user?.user_metadata?.avatar_url ||
-              'https://via.placeholder.com/40',
+            uri: ownerInfo.avatar_url || 'https://via.placeholder.com/40',
           }}
           style={styles.avatar}
         />
@@ -158,24 +207,21 @@ export default function ActivityDetailScreen() {
         </MapView>
 
         <View style={styles.contentBox}>
-          {/* Header info */}
           <View style={styles.headerRow}>
             <View style={styles.userInfo}>
               <Image
                 source={{
-                  uri:
-                    user?.user_metadata?.avatar_url ||
-                    'https://via.placeholder.com/40',
+                  uri: ownerInfo.avatar_url || 'https://via.placeholder.com/40',
                 }}
                 style={styles.avatarSmall}
               />
               <View>
                 <Text style={styles.username}>
-                  {activityData.title || 'Activity'}
+                  {ownerInfo.display_name || t('common.user')}
                 </Text>
                 <Text style={styles.meta}>
-                  {new Date(activityData.start_time).toLocaleDateString()} •{' '}
-                  {activityData.location || 'Unknown'}
+                  {new Date(activityData.start_time).toLocaleDateString(loc)} •{' '}
+                  {activityData.location || t('common.unknown')}
                 </Text>
               </View>
             </View>
@@ -184,56 +230,67 @@ export default function ActivityDetailScreen() {
               <TouchableOpacity onPress={shareActivity}>
                 <Feather name="share-2" size={22} color="white" />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('SaveActivity', {
-                    route: routePath,
-                    distance: activityData.distance_meters,
-                    startTime: new Date(activityData.start_time),
-                    endTime: new Date(activityData.end_time),
-                    elevation: activityData.elevation,
-                    location: activityData.location,
-                    activityId,
-                    existingData: activityData,
-                  })
-                }
-              >
-                <Feather name="edit" size={22} color="white" />
+              <TouchableOpacity onPress={toggleSave}>
+                <Ionicons
+                  name={isSaved ? 'bookmark' : 'bookmark-outline'}
+                  size={22}
+                  color={isSaved ? '#00ffcc' : 'white'}
+                />
               </TouchableOpacity>
-              <TouchableOpacity onPress={confirmDelete}>
-                <Entypo name="trash" size={22} color="red" />
-              </TouchableOpacity>
+              {isOwner && (
+                <>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('SaveActivity', {
+                        route: routePath,
+                        distance: activityData.distance_meters,
+                        startTime: new Date(activityData.start_time),
+                        endTime: new Date(activityData.end_time),
+                        elevation: activityData.elevation,
+                        location: activityData.location,
+                        activityId,
+                        existingData: activityData,
+                      })
+                    }
+                  >
+                    <Feather name="edit" size={22} color="white" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={confirmDelete}>
+                    <Entypo name="trash" size={22} color="red" />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
 
-          {/* Stats grid */}
           <View style={styles.statsGrid}>
             <View style={styles.statBox}>
-              <Text style={styles.label}>Distance</Text>
+              <Text style={styles.label}>{t('activityDetail.distance')}</Text>
               <Text style={styles.value}>
                 {(activityData.distance_meters / 1000).toFixed(1)} km
               </Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.label}>Duration</Text>
+              <Text style={styles.label}>{t('activityDetail.duration')}</Text>
               <Text style={styles.value}>
-                {Math.round(activityData.duration_seconds / 60)} min
+                {Math.round(activityData.duration_seconds / 60)}{' '}
+                {t('common.minutes')}
               </Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.label}>Elevation</Text>
+              <Text style={styles.label}>{t('activityDetail.elevation')}</Text>
               <Text style={styles.value}>{activityData.elevation || 0} m</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.label}>Difficulty</Text>
+              <Text style={styles.label}>{t('activityDetail.difficulty')}</Text>
               <Text style={styles.value}>{activityData.difficulty}</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.label}>Type</Text>
+              <Text style={styles.label}>{t('activityDetail.type')}</Text>
               <Text style={styles.value}>{activityData.type}</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.label}>Rating</Text>
+              <Text style={styles.label}>{t('activityDetail.rating')}</Text>
               <View style={{ flexDirection: 'row' }}>
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Ionicons
@@ -247,10 +304,11 @@ export default function ActivityDetailScreen() {
             </View>
           </View>
 
-          {/* Description */}
           {activityData.description ? (
             <View style={{ marginTop: 20 }}>
-              <Text style={styles.label}>Description</Text>
+              <Text style={styles.label}>
+                {t('activityDetail.description')}
+              </Text>
               <Text style={[styles.value, { marginTop: 4 }]}>
                 {activityData.description}
               </Text>
