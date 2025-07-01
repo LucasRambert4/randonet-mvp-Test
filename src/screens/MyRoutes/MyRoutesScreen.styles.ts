@@ -42,6 +42,14 @@ const styles = StyleSheet.create({
     color: '#ccc',
     paddingBottom: 5,
   },
+  deleteAction: {
+    backgroundColor: '#e74c3c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: '100%',
+    borderRadius: 8,
+  },
   activeTab: {
     color: 'white',
     borderBottomWidth: 2,

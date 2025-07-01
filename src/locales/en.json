@@ -38,8 +38,9 @@
     "distance": "Distance",
     "duration": "Duration",
     "difficulty": "Difficulty",
-    "save": "Save Trail",
-    "unsave": "Unsave Trail"
+    "save": "Save trail",
+    "unsave": "Remove from saved",
+    "start": "Start Activity"
   },
   "chatList": {
     "title": "Community",
@@ -95,13 +96,20 @@
   },
   "myRoutes": {
     "title": "My Routes",
-    "searchPlaceholder": "Search routes...",
     "tabCompleted": "Completed",
     "tabSaved": "Saved",
-    "errorLoad": "Failed to load activities.",
+    "searchPlaceholder": "Search activities...",
+    "activityDefault": "Unnamed activity",
+    "unknown": "Unknown location",
     "elevationLabel": "Elevation",
     "difficultyLabel": "Difficulty",
-    "activityDefault": "Hike"
+    "errorLoadTitle": "Oops!",
+    "errorLoadMessage": "Something went wrong while loading.",
+    "deleteSuccess": "Activity deleted successfully!",
+    "confirmDeleteTitle": "Delete Activity",
+    "confirmDeleteMessage": "Are you sure you want to delete this activity?",
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
   "profile": {
     "title": "My Profile",
@@ -194,9 +202,9 @@
     "typehiking": "Hiking",
     "typebiking": "Biking",
     "labelDifficulty": "Difficulty",
-    "difficultyeasy": "Easy",
-    "difficultynormal": "Normal",
-    "difficultyhard": "Hard",
+    "difficultyEasy": "Easy",
+    "difficultyNormal": "Normal",
+    "difficultyHard": "Hard",
     "labelLocation": "Location",
     "labelElevation": "Elevation Gain (m)",
     "buttonSave": "Save Activity",

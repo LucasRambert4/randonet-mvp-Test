@@ -18,6 +18,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
+  contentBox: {
+    backgroundColor: '#004d40',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -30,
+    padding: 20,
+    flex: 1,
+  },
+
   avatar: {
     width: 35,
     height: 35,

@@ -1,102 +1,29 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Share,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import {
-  useNavigation,
-  useRoute,
-  useFocusEffect,
-} from '@react-navigation/native';
 import MapView, { Polyline } from 'react-native-maps';
-import { supabase } from '../../../supabase-config';
-import { useAuth } from '../../context/AuthContext';
-import { useTranslation } from 'react-i18next';
+import useTrailDetailsLogic from './TrailDetailsScreen.logic';
 import styles from './TrailDetailsScreen.styles';
-import { Trail } from '../../services/trailsService';
-
-type RouteParams = {
-  trail: Trail;
-};
 
 export default function TrailDetailsScreen() {
-  const navigation = useNavigation();
-  const { user } = useAuth();
-  const { t } = useTranslation();
-
-  const route = useRoute();
-  const { trail } = route.params as RouteParams;
-
-  const [isSaved, setIsSaved] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const fallbackCoord = { lat: 48.8566, lon: 2.3522 };
-
-  const checkSaved = async () => {
-    if (!user?.id || !trail?.id) return;
-
-    const { data, error } = await supabase
-      .from('saved_activities')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('activity_id', trail.id);
-
-    if (error) console.error('checkSaved error', error);
-
-    setIsSaved(!!(data && data.length > 0));
-  };
-
-  const toggleSave = async () => {
-    if (!user?.id || !trail?.id) return;
-
-    if (isSaved) {
-      const { error } = await supabase
-        .from('saved_activities')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('activity_id', trail.id);
-      if (error) console.error(error);
-      setIsSaved(false);
-    } else {
-      const { error } = await supabase
-        .from('saved_activities')
-        .insert([{ user_id: user.id, activity_id: trail.id }]);
-      if (error) console.error(error);
-      setIsSaved(true);
-    }
-  };
-
-  const shareTrail = async () => {
-    try {
-      const message = `${trail.name} - ${trail.summary || ''} (${
-        trail.distance
-      } km)`;
-      await Share.share({ message });
-    } catch (err) {
-      console.error('Error sharing trail:', err);
-    }
-  };
-
-  useEffect(() => {
-    checkSaved().finally(() => setLoading(false));
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      checkSaved();
-    }, [])
-  );
-
-  const firstNode =
-    Array.isArray(trail.nodes) && trail.nodes.length > 0
-      ? trail.nodes[0]
-      : fallbackCoord;
+  const {
+    t,
+    navigation,
+    trail,
+    loading,
+    shareTrail,
+    toggleSave,
+    isSaved,
+    startActivity,
+    firstNode,
+  } = useTrailDetailsLogic();
 
   if (loading) {
     return (
@@ -133,7 +60,7 @@ export default function TrailDetailsScreen() {
             longitudeDelta: 0.01,
           }}
         >
-          {Array.isArray(trail.nodes) && trail.nodes.length > 1 && (
+          {trail.nodes?.length > 1 && (
             <Polyline
               coordinates={trail.nodes.map((n) => ({
                 latitude: n.lat,
@@ -174,6 +101,11 @@ export default function TrailDetailsScreen() {
             <Text style={styles.saveText}>
               {isSaved ? t('trailDetail.unsave') : t('trailDetail.save')}
             </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.startButton} onPress={startActivity}>
+            <Ionicons name="play-circle" size={22} color="#ffffff" />
+            <Text style={styles.startText}>{t('trailDetail.start')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

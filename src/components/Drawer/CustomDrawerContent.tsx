@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import SOSModalTrigger from '../SOS/SOSModalTrigger';
 import { useAuth } from '../../context/AuthContext';
@@ -15,7 +15,6 @@ export default function CustomDrawerContent(props: any) {
       {...props}
       contentContainerStyle={{ flex: 1, backgroundColor: '#013220' }}
     >
-      {/* Header with user profile */}
       <View style={styles.header}>
         <Image
           source={{
@@ -31,17 +30,26 @@ export default function CustomDrawerContent(props: any) {
           </Text>
           <Text
             style={styles.linkText}
-            onPress={() => props.navigation.navigate('Profile')}
+            onPress={() =>
+              props.navigation.navigate('HomeTabs', {
+                screen: 'Home',
+                params: { screen: 'Profile' },
+              })
+            }
           >
             Voir le profil
           </Text>
         </View>
       </View>
 
-      {/* Drawer Items */}
       <DrawerItem
         label="Mes Itinéraires"
-        onPress={() => props.navigation.navigate('MyRoutes')}
+        onPress={() =>
+          props.navigation.navigate('HomeTabs', {
+            screen: 'Home',
+            params: { screen: 'MyRoutes' },
+          })
+        }
         labelStyle={styles.drawerLabel}
         icon={({ size }) => (
           <Ionicons
@@ -52,9 +60,15 @@ export default function CustomDrawerContent(props: any) {
           />
         )}
       />
+
       <DrawerItem
         label="Préférences et confidentialité"
-        onPress={() => props.navigation.navigate('Privacy')}
+        onPress={() =>
+          props.navigation.navigate('HomeTabs', {
+            screen: 'Home',
+            params: { screen: 'Privacy' },
+          })
+        }
         labelStyle={styles.drawerLabel}
         icon={({ size }) => (
           <Ionicons
@@ -65,6 +79,7 @@ export default function CustomDrawerContent(props: any) {
           />
         )}
       />
+
       <DrawerItem
         label="SOS"
         labelStyle={{ ...styles.drawerLabel, color: 'red' }}

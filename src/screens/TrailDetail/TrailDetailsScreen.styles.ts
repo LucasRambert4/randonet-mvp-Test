@@ -11,6 +11,22 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     padding: 16,
   },
+  startButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#02c95c',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+
+  startText: {
+    color: '#ffffff',
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: '600',
+  },
   title: {
     color: '#fff',
     fontSize: 18,

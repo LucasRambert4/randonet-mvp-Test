@@ -1,10 +1,11 @@
 // ProfileScreen.styles.ts
-import { StyleSheet } from 'react-native';
+import { Platform, StatusBar, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0d3a27',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   topBar: {
     flexDirection: 'row',

@@ -28,13 +28,7 @@
     "rating": "Note",
     "description": "Description"
   },
-  "trailDetail": {
-    "distance": "Distance",
-    "duration": "Durée",
-    "difficulty": "Difficulté",
-    "save": "Enregistrer le sentier",
-    "unsave": "Retirer le sentier"
-  },
+
   "chatList": {
     "title": "Communauté",
     "searchPlaceholder": "Recherche…",
@@ -87,15 +81,30 @@
     "signupErrorTitle": "Erreur à l’inscription",
     "signupSuccess": "Inscription réussie !"
   },
+  "trailDetail": {
+    "distance": "Distance",
+    "duration": "Durée",
+    "difficulty": "Difficulté",
+    "save": "Enregistrer le parcours",
+    "unsave": "Retirer des favoris",
+    "start": "Commencer l'activité"
+  },
   "myRoutes": {
-    "title": "Mes itinéraires",
-    "searchPlaceholder": "Rechercher…",
+    "title": "Mes Parcours",
     "tabCompleted": "Terminés",
     "tabSaved": "Enregistrés",
-    "errorLoad": "Échec du chargement des activités.",
+    "searchPlaceholder": "Rechercher une activité...",
+    "activityDefault": "Activité sans nom",
+    "unknown": "Lieu inconnu",
     "elevationLabel": "Dénivelé",
-    "activityDefault": "Randonnée",
-    "difficultyLabel": "Difficulté"
+    "difficultyLabel": "Difficulté",
+    "errorLoadTitle": "Oups !",
+    "errorLoadMessage": "Une erreur s'est produite lors du chargement.",
+    "deleteSuccess": "Activité supprimée avec succès !",
+    "confirmDeleteTitle": "Supprimer l'activité",
+    "confirmDeleteMessage": "Voulez-vous vraiment supprimer cette activité ?",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   },
   "profile": {
     "title": "Mon profil",
@@ -188,9 +197,9 @@
     "typehiking": "Randonnée",
     "typebiking": "Vélo",
     "labelDifficulty": "Difficulté",
-    "difficultyeasy": "Facile",
-    "difficultynormal": "Normal",
-    "difficultyhard": "Difficile",
+    "difficultyEasy": "Facile",
+    "difficultyNormal": "Normal",
+    "difficultyHard": "Difficile",
     "labelLocation": "Emplacement",
     "labelElevation": "Dénivelé (m)",
     "buttonSave": "Enregistrer",

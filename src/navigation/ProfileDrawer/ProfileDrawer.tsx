@@ -1,4 +1,5 @@
 // src/navigation/ProfileDrawer.tsx
+
 import React from 'react';
 import {
   createDrawerNavigator,
@@ -9,9 +10,7 @@ import { View, Text, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 
-import ProfileScreen from '../../screens/Profile/ProfileScreen';
-import MyRoutesScreen from '../../screens/MyRoutes/MyRoutesScreen';
-import PrivacyScreen from '../../screens/Privacy/PrivacyScreen';
+import MainTabs from './MainTabs'; // ✅ Import your unified tab navigator
 
 import styles from './ProfileDrawer.styles';
 
@@ -44,7 +43,9 @@ function CustomDrawerContent(props) {
           <Text style={styles.username}>{username}</Text>
           <Text
             style={styles.linkText}
-            onPress={() => props.navigation.navigate('ProfileHome')}
+            onPress={() =>
+              props.navigation.navigate('Home', { screen: 'Profile' })
+            }
           >
             {t('profileDrawer.viewProfile')}
           </Text>
@@ -52,7 +53,9 @@ function CustomDrawerContent(props) {
       </View>
 
       <DrawerItem
-        onPress={() => props.navigation.navigate('MyRoutes')}
+        onPress={() =>
+          props.navigation.navigate('Home', { screen: 'MyRoutes' })
+        }
         icon={() => <Text style={styles.icon}>🧭</Text>}
         label={({ color }) => (
           <Text style={[styles.drawerLabel, { color }]}>
@@ -60,8 +63,9 @@ function CustomDrawerContent(props) {
           </Text>
         )}
       />
+
       <DrawerItem
-        onPress={() => props.navigation.navigate('Privacy')}
+        onPress={() => props.navigation.navigate('Home', { screen: 'Privacy' })}
         icon={() => <Text style={styles.icon}>👤</Text>}
         label={({ color }) => (
           <Text style={[styles.drawerLabel, { color }]}>
@@ -76,12 +80,11 @@ function CustomDrawerContent(props) {
 export default function ProfileDrawer() {
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{ headerShown: false }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="ProfileHome" component={ProfileScreen} />
-      <Drawer.Screen name="MyRoutes" component={MyRoutesScreen} />
-      <Drawer.Screen name="Privacy" component={PrivacyScreen} />
+      {/* ✅ Use only the unified MainTabs */}
+      <Drawer.Screen name="HomeTabs" component={MainTabs} />
     </Drawer.Navigator>
   );
 }
