@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { DrawerActions } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SearchBar from '../../components/Search/SearchBar';
+import SearchBar from '../../components/Search';
 import ActivityCard from './ActivityCard';
 import useSharedActivityLogic from './SharedActivityScreen.logic';
 import styles from './SharedActivityScreen.styles';

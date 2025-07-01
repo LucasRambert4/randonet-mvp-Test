@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import SearchBar from '../../components/Search/SearchBar';
+import SearchBar from '../../components/Search';
 import { DrawerActions } from '@react-navigation/native';
 import styles from './ChatScreen.styles';
 

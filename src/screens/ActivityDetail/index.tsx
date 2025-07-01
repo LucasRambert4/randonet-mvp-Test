@@ -75,7 +75,6 @@ export default function ActivityDetailScreen() {
           )}
         </MapView>
 
-        {/* ✅ All details INSIDE ONE contentBox */}
         <View style={styles.contentBox}>
           <HeaderRow
             ownerInfo={ownerInfo}
@@ -91,7 +90,6 @@ export default function ActivityDetailScreen() {
           />
 
           <StatsGrid t={t} activityData={activityData} />
-
           <DescriptionBox t={t} description={activityData.description} />
         </View>
       </ScrollView>

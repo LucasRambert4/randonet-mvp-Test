@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { View, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import SOSModalTrigger from '../SOS/SOSModalTrigger';
+import SOSModalTrigger from '../SOS';
 import { useAuth } from '../../context/AuthContext';
 import styles from './CustomDrawerContent.styles';
+import { useTranslation } from 'react-i18next';
 
 export default function CustomDrawerContent(props: any) {
   const [modalVisible, setModalVisible] = useState(false);
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
+  const loc = i18n.resolvedLanguage;
 
   return (
     <DrawerContentScrollView
@@ -26,7 +29,8 @@ export default function CustomDrawerContent(props: any) {
         />
         <View>
           <Text style={styles.username}>
-            {user?.user_metadata?.displayName || 'Username'}
+            {user?.user_metadata?.displayName ||
+              t('profileDrawer.usernameDefault')}
           </Text>
           <Text
             style={styles.linkText}
@@ -37,13 +41,13 @@ export default function CustomDrawerContent(props: any) {
               })
             }
           >
-            Voir le profil
+            {t('profileDrawer.viewProfile')}
           </Text>
         </View>
       </View>
 
       <DrawerItem
-        label="Mes Itinéraires"
+        label={t('profileDrawer.tabRoutes')}
         onPress={() =>
           props.navigation.navigate('HomeTabs', {
             screen: 'Home',
@@ -62,7 +66,7 @@ export default function CustomDrawerContent(props: any) {
       />
 
       <DrawerItem
-        label="Préférences et confidentialité"
+        label={t('profileDrawer.tabPrivacy')}
         onPress={() =>
           props.navigation.navigate('HomeTabs', {
             screen: 'Home',

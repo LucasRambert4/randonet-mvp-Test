@@ -62,14 +62,17 @@ export const HeaderRow = ({
               navigation.navigate('Record', {
                 screen: 'SaveActivity',
                 params: {
-                  route: routePath,
-                  distance: activityData.distance_meters,
-                  startTime: new Date(activityData.start_time),
-                  endTime: new Date(activityData.end_time),
-                  elevation: activityData.elevation,
-                  location: activityData.location,
                   activityId: activityData.id,
-                  existingData: activityData,
+                  title: activityData.title,
+                  description: activityData.description,
+                  rating: activityData.rating,
+                  type: activityData.type,
+                  difficulty: activityData.difficulty,
+                  startTime: new Date(activityData.start_time).getTime(),
+                  endTime: new Date(activityData.end_time).getTime(),
+                  distance: activityData.distance_meters,
+                  location: activityData.location,
+                  elevation: activityData.elevation,
                 },
               })
             }

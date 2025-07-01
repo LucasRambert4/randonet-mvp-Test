@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
-import SearchBar from '../../components/Search/SearchBar';
+import SearchBar from '../../components/Search';
 import styles from './UserSearchScreen.styles';
 
 export const TopBar = ({ navigation, user, t }: any) => (
@@ -61,7 +61,7 @@ export const UserRow = ({
       onPress={() =>
         navigation.navigate('Home', {
           screen: 'UserProfile',
-          params: { user: item },
+          params: { friendId: item.id },
         })
       }
       style={styles.userRow}

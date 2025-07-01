@@ -8,25 +8,25 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 // Screens
-import HomeScreen from '../../screens/SharedActivity';
-import ChatScreen from '../../screens/Chat';
-import ExploreScreen from '../../screens/Explore';
-import LoginScreen from '../../screens/Login';
-import LoaderScreen from '../../screens/Loader';
-import ProfileScreen from '../../screens/Profile';
-import MyRoutesScreen from '../../screens/MyRoutes';
-import PrivacyScreen from '../../screens/Privacy';
-import ActivityDetailScreen from '../../screens/ActivityDetail';
-import UserSearchScreen from '../../screens/UserSearch';
-import UserProfileScreen from '../../screens/UserProfile';
-import RecordActivityScreen from '../../screens/RecordActivity';
-import SaveActivityScreen from '../../screens/SaveActivity';
-import TrailDetailsScreen from '../../screens/TrailDetail';
-import CustomDrawerContent from '../../components/Drawer/CustomDrawerContent';
-import SOSModalTrigger from '../../components/SOS/SOSModalTrigger';
+import HomeScreen from '../screens/SharedActivity';
+import ChatScreen from '../screens/Chat';
+import ExploreScreen from '../screens/Explore';
+import LoginScreen from '../screens/Login';
+import LoaderScreen from '../screens/Loader';
+import ProfileScreen from '../screens/Profile';
+import MyRoutesScreen from '../screens/MyRoutes';
+import PrivacyScreen from '../screens/Privacy';
+import ActivityDetailScreen from '../screens/ActivityDetail';
+import UserSearchScreen from '../screens/UserSearch';
+import UserProfileScreen from '../screens/UserSearch';
+import RecordActivityScreen from '../screens/RecordActivity';
+import SaveActivityScreen from '../screens/RecordActivity';
+import TrailDetailsScreen from '../screens/Explore';
+import CustomDrawerContent from '../components/Drawer';
+import SOSModalTrigger from '../components/SOS';
 
 // Shared types for nested stacks
 import {

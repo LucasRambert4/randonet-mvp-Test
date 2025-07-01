@@ -1,6 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { Share } from 'react-native';
 import { supabase } from '../../../supabase-config';
 
 export default function useUserProfileLogic() {
@@ -9,29 +10,31 @@ export default function useUserProfileLogic() {
   const route = useRoute();
   const { friendId } = route.params as { friendId: string };
 
-  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<{
+    name: string;
+    avatar: string;
+  } | null>(null);
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfileAndActivities = async () => {
       try {
-        // 1️⃣ Get the profile info
-        const { data: profile, error: profileError } = await supabase
+        // ✅ Get friend's profile
+        const { data: prof, error: profileError } = await supabase
           .from('profiles')
-          .select('id, display_name, avatar_url')
+          .select('display_name, avatar_url')
           .eq('id', friendId)
           .single();
 
         if (profileError) throw profileError;
 
-        setUser({
-          id: profile.id,
-          name: profile.display_name,
-          avatar: profile.avatar_url,
+        setProfile({
+          name: prof?.display_name || 'Unknown',
+          avatar: prof?.avatar_url || '',
         });
 
-        // 2️⃣ Get activities (example if using storage)
+        // ✅ Get friend's activities
         const { data: files } = await supabase.storage
           .from('activities')
           .list(friendId);
@@ -83,5 +86,28 @@ export default function useUserProfileLogic() {
     });
   };
 
-  return { user, navigation, t, activities, loading, handleActivityPress };
+  const shareActivity = async (item: any) => {
+    try {
+      await Share.share({
+        message: t('shared.shareMessage', {
+          username: profile?.name,
+          location: item.location,
+          distance: item.distance,
+          duration: item.duration,
+        }),
+      });
+    } catch (err) {
+      console.error('Share error', err);
+    }
+  };
+
+  return {
+    navigation,
+    t,
+    profile,
+    activities,
+    loading,
+    handleActivityPress,
+    shareActivity,
+  };
 }

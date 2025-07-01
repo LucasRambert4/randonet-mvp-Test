@@ -1,127 +1,80 @@
-import { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useState } from 'react';
 import { supabase } from '../../../supabase-config';
-import * as FileSystem from 'expo-file-system';
-import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
-export default function useSaveActivityLogic() {
-  const navigation = useNavigation();
-  const routeParams = useRoute().params as {
-    route: any[];
-    distance: number;
-    startTime: Date | null;
-    endTime: Date;
-    elevation: number;
-    location: string;
-    trailId?: string | null;
-    activityId?: string;
-    existingData?: any;
-  };
+export default function useSaveActivityLogic(user, routeParams, navigation) {
+  const { activityId, ...otherParams } = routeParams;
+  const isEditing = !!activityId;
 
-  const { user } = useAuth();
-  const { t } = useTranslation();
-
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [rating, setRating] = useState(0);
-  const [type, setType] = useState<'hiking' | 'running' | 'biking'>('running');
-  const [difficulty, setDifficulty] = useState<'easy' | 'normal' | 'hard'>(
-    'normal'
+  const [title, setTitle] = useState(otherParams.title || '');
+  const [description, setDescription] = useState(otherParams.description || '');
+  const [rating, setRating] = useState(otherParams.rating || 1);
+  const [type, setType] = useState(otherParams.type || 'running');
+  const [difficulty, setDifficulty] = useState(
+    otherParams.difficulty || 'normal'
   );
 
-  useEffect(() => {
-    if (routeParams.existingData) {
-      const d = routeParams.existingData;
-      setTitle(d.title || '');
-      setDescription(d.description || '');
-      setRating(d.rating || 0);
-      setType(d.type || 'running');
-      setDifficulty(d.difficulty || 'normal');
-    }
-  }, []);
+  const { t, i18n } = useTranslation();
+  const loc = i18n.resolvedLanguage;
 
   const save = async () => {
     if (!user) {
-      Alert.alert(
-        t('saveActivity.errorTitle'),
-        t('saveActivity.errorNotLoggedIn')
+      alert(
+        `${t('saveActivity.errorTitle')}: ${t('saveActivity.errorNotLoggedIn')}`
       );
       return;
     }
 
-    try {
-      const filename = routeParams.activityId || `${Date.now()}.json`;
-      const path = `${user.id}/${filename}`;
-      const duration =
-        routeParams.startTime && routeParams.endTime
-          ? Math.round(
-              (+new Date(routeParams.endTime) -
-                +new Date(routeParams.startTime)) /
-                1000
-            )
-          : 0;
+    const json = {
+      title,
+      description,
+      rating,
+      type,
+      difficulty,
+      ...otherParams,
+      owner_id: user.id,
+    };
 
-      const data = {
-        user_id: user.id,
-        start_time: routeParams.startTime?.toISOString(),
-        end_time: routeParams.endTime.toISOString(),
-        duration_seconds: duration,
-        distance_meters: Math.round(routeParams.distance),
-        path: routeParams.route,
-        title,
-        description,
-        rating,
-        type,
-        difficulty,
-        location: routeParams.location,
-        elevation: Math.round(routeParams.elevation || 0),
-        trail_id: routeParams.trailId || null,
-      };
+    const fileName = activityId
+      ? `activity-${activityId}.json`
+      : `activity-${Date.now()}.json`;
 
-      const fileUri = FileSystem.cacheDirectory + filename;
-      await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(data), {
-        encoding: FileSystem.EncodingType.UTF8,
+    if (isEditing) {
+      await supabase.storage.from('activities-bucket').remove([fileName]);
+    }
+
+    const { error } = await supabase.storage
+      .from('activities-bucket')
+      .upload(fileName, JSON.stringify(json), {
+        contentType: 'application/json',
+        upsert: true,
       });
 
-      const { error: uploadError } = await supabase.storage
-        .from('activities')
-        .upload(
-          path,
-          { uri: fileUri, type: 'application/json', name: filename } as any,
-          { upsert: true, contentType: 'application/json' }
-        );
-
-      if (uploadError) throw uploadError;
-
-      Alert.alert(
-        t('saveActivity.successTitle'),
-        t('saveActivity.successMessage')
+    if (error) {
+      alert(
+        `${t('saveActivity.errorTitle')}: ${t('saveActivity.errorSaveFailed')}`
       );
-      navigation.goBack();
-    } catch (err: any) {
-      Alert.alert(
-        t('saveActivity.errorTitle'),
-        err.message || t('saveActivity.errorSaveFailed')
+    } else {
+      alert(
+        `${t('saveActivity.successTitle')}: ${t('saveActivity.successMessage')}`
       );
     }
+
+    navigation.goBack();
   };
 
   return {
     t,
     title,
-    description,
-    rating,
-    type,
-    difficulty,
     setTitle,
+    description,
     setDescription,
+    rating,
     setRating,
+    type,
     setType,
+    difficulty,
     setDifficulty,
-    location: routeParams.location,
-    elevation: routeParams.elevation,
     save,
   };
 }

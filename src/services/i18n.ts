@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 
-import en from './locales/en.json';
-import fr from './locales/fr.json';
+import en from '../locales/en.json';
+import fr from '../locales/fr.json';
 
 const deviceLocale = Localization.locale ?? 'en';
 const initialLang = deviceLocale.startsWith('fr') ? 'fr' : 'en';

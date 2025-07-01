@@ -8,15 +8,21 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import MapView, { Polyline } from 'react-native-maps';
 import useUserProfileLogic from './UserProfileScreen.logic';
 import styles from './UserProfileScreen.styles';
+import { ActivityCard } from './UserProfileScreen.components';
 
 export default function UserProfileScreen() {
-  const { user, navigation, t, activities, loading, handleActivityPress } =
-    useUserProfileLogic();
+  const {
+    navigation,
+    t,
+    profile,
+    activities,
+    loading,
+    handleActivityPress,
+    shareActivity,
+  } = useUserProfileLogic();
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -24,13 +30,15 @@ export default function UserProfileScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.title}>{user.name}</Text>
+        <Text style={styles.title}>{profile?.name || t('common.loading')}</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <View style={styles.header}>
-        <Image source={{ uri: user.avatar }} style={styles.avatar} />
-        <Text style={styles.name}>{user.name}</Text>
+        {profile?.avatar ? (
+          <Image source={{ uri: profile.avatar }} style={styles.avatar} />
+        ) : null}
+        <Text style={styles.name}>{profile?.name}</Text>
       </View>
 
       {loading ? (
@@ -44,35 +52,13 @@ export default function UserProfileScreen() {
           data={activities}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleActivityPress(item)}>
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>{item.title || item.name}</Text>
-                <Text style={styles.cardMeta}>
-                  {item.date} • {item.distance} • {item.duration}
-                </Text>
-                {item.path?.length > 1 && (
-                  <MapView
-                    style={styles.map}
-                    scrollEnabled={false}
-                    zoomEnabled={false}
-                    pitchEnabled={false}
-                    rotateEnabled={false}
-                    initialRegion={{
-                      latitude: item.path[0].latitude,
-                      longitude: item.path[0].longitude,
-                      latitudeDelta: 0.01,
-                      longitudeDelta: 0.01,
-                    }}
-                  >
-                    <Polyline
-                      coordinates={item.path}
-                      strokeColor="#02c95c"
-                      strokeWidth={3}
-                    />
-                  </MapView>
-                )}
-              </View>
-            </TouchableOpacity>
+            <ActivityCard
+              item={item}
+              profile={profile}
+              t={t}
+              onPress={() => handleActivityPress(item)}
+              onShare={() => shareActivity(item)}
+            />
           )}
           contentContainerStyle={styles.list}
         />
