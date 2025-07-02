@@ -4,7 +4,7 @@ import * as Location from 'expo-location';
 import haversine from 'haversine';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation';
+import { RootStackParamList } from '../../navigation/navigation';
 import { useTranslation } from 'react-i18next';
 import { Trail } from '../../services/trailsService';
 
@@ -72,7 +72,9 @@ export default function useRecordActivityLogic() {
         }
       }
     })();
-    return () => intervalRef.current && clearInterval(intervalRef.current);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -81,9 +83,11 @@ export default function useRecordActivityLogic() {
         setDuration(Math.floor((Date.now() - startTime.getTime()) / 1000));
       }, 1000);
     } else {
-      intervalRef.current && clearInterval(intervalRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     }
-    return () => intervalRef.current && clearInterval(intervalRef.current);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [recording, paused, startTime]);
 
   const startRecording = async () => {
@@ -159,23 +163,28 @@ export default function useRecordActivityLogic() {
   const pauseOrResume = () => setPaused((p) => !p);
 
   const stopRecording = () => {
-    watchId.current && watchId.current.remove();
-    intervalRef.current && clearInterval(intervalRef.current);
+    // Properly clear tracking
+    if (watchId.current) watchId.current.remove();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
     const finalEndTime = new Date();
+
+    const totalDuration = Math.floor(
+      (finalEndTime.getTime() -
+        (startTime?.getTime() || finalEndTime.getTime())) /
+        1000
+    );
+
     setRecording(false);
     setPaused(false);
-    setDuration(
-      Math.floor(
-        (finalEndTime.getTime() -
-          (startTime?.getTime() || finalEndTime.getTime())) /
-          1000
-      )
-    );
+    setDuration(totalDuration);
+
+    // ✅ Make sure to pass final up-to-date values!
     navigation.navigate('SaveActivity', {
       route,
       distance,
-      startTime,
-      endTime: finalEndTime,
+      startTime: startTime?.toISOString() || null,
+      endTime: finalEndTime.toISOString(),
       elevation,
       location: placeName,
       trailId: trail?.id || null,
@@ -183,8 +192,8 @@ export default function useRecordActivityLogic() {
   };
 
   const dismissActivity = () => {
-    watchId.current && watchId.current.remove();
-    intervalRef.current && clearInterval(intervalRef.current);
+    if (watchId.current) watchId.current.remove();
+    if (intervalRef.current) clearInterval(intervalRef.current);
     setRecording(false);
     setPaused(false);
     setRoute([]);

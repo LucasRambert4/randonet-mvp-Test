@@ -1,8 +1,14 @@
+// src/screens/Explore/ExploreScreen.logic.tsx
+
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { fetchTrailsIledeFrance, Trail } from '../../services/trailsService';
 import TrailCard from './TrailCard';
+
+// ✔️ Import helpers bien isolés
+import { formatDifficulty } from './tests/formatDifficulty';
+import { getVisibleAndSorted } from './tests/getVisibleAndSorted';
 
 export default function useExploreScreenLogic() {
   const { t } = useTranslation();
@@ -43,46 +49,16 @@ export default function useExploreScreenLogic() {
     return () => clearInterval(interval);
   }, [allTrails, loading]);
 
-  const formatDifficulty = (raw?: string) => {
-    if (!raw) return t('explore.unknown');
-    const map: Record<string, string> = {
-      easy: t('explore.difficultyEasy'),
-      moderate: t('explore.difficultyModerate'),
-      difficult: t('explore.difficultyDifficult'),
-    };
-    return map[raw.toLowerCase()] || raw;
-  };
-
   const visibleAndSorted = useMemo(() => {
-    return visibleTrails
-      .filter(
-        (trail) =>
-          trail.name.toLowerCase().includes(search.toLowerCase()) &&
-          (difficulty
-            ? formatDifficulty(trail.difficulty) === difficulty
-            : true)
-      )
-      .sort((a, b) => {
-        const getVal = (t: Trail) =>
-          sortBy === 'name'
-            ? t.name
-            : sortBy === 'distance'
-            ? t.distance
-            : parseInt(t.estimatedDuration, 10);
-
-        const aVal = getVal(a);
-        const bVal = getVal(b);
-
-        if (typeof aVal === 'string' && typeof bVal === 'string') {
-          return sortDirection === 'asc'
-            ? aVal.localeCompare(bVal)
-            : bVal.localeCompare(aVal);
-        }
-        return sortDirection === 'asc'
-          ? (aVal as number) - (bVal as number)
-          : (bVal as number) - (aVal as number);
-      });
-  }, [visibleTrails, search, difficulty, sortBy, sortDirection]);
+    return getVisibleAndSorted(
+      visibleTrails,
+      search,
+      difficulty,
+      sortBy,
+      sortDirection,
+      (raw) => formatDifficulty(raw, t)
+    );
+  }, [visibleTrails, search, difficulty, sortBy, sortDirection, t]);
 
   const renderTrail = useCallback(
     ({ item, index }: { item: Trail; index: number }) => (
@@ -95,6 +71,12 @@ export default function useExploreScreenLogic() {
     t,
     search,
     setSearch,
+    difficulty,
+    setDifficulty,
+    sortBy,
+    setSortBy,
+    sortDirection,
+    setSortDirection,
     loading,
     visibleAndSorted,
     renderTrail,

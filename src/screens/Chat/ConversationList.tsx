@@ -62,33 +62,29 @@ export default function ConversationList({
             {t('chatList.tabChats')}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setTab('Groups')}
-          style={styles.tabItem}
-        >
-          <Text style={[styles.tabText, tab === 'Groups' && styles.activeTab]}>
-            {t('chatList.tabGroups')}
-          </Text>
-        </TouchableOpacity>
       </View>
 
-      {conversations.map((item: any) => (
-        <TouchableOpacity
-          key={item.id}
-          onPress={() => setSelectedConversation(item)}
-          style={styles.chatItem}
-        >
-          <Image
-            source={{ uri: 'https://via.placeholder.com/50' }}
-            style={styles.chatAvatar}
-          />
-          <View style={styles.chatContent}>
-            <View style={styles.chatHeader}>
-              <Text style={styles.chatName}>{getOtherUserName(item)}</Text>
+      {conversations
+        .filter((item: any) =>
+          getOtherUserName(item).toLowerCase().includes(search.toLowerCase())
+        )
+        .map((item: any) => (
+          <TouchableOpacity
+            key={item.id}
+            onPress={() => setSelectedConversation(item)}
+            style={styles.chatItem}
+          >
+            <Image
+              source={{ uri: 'https://via.placeholder.com/50' }}
+              style={styles.chatAvatar}
+            />
+            <View style={styles.chatContent}>
+              <View style={styles.chatHeader}>
+                <Text style={styles.chatName}>{getOtherUserName(item)}</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        ))}
     </ScrollView>
   );
 }

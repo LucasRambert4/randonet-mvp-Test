@@ -1,3 +1,4 @@
+//ChatScreen.logic.ts
 import { useEffect, useState, useRef } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';

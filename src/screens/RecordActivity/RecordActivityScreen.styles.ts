@@ -1,10 +1,14 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 
 export const { height } = Dimensions.get('window');
 export const TAB_BAR_HEIGHT = 60;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0d3a27' },
+  container: {
+    flex: 1,
+    backgroundColor: '#0d3a27',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
   map: { width: '100%', height: height * 0.66 },
   infoPanel: {
     flex: 1,

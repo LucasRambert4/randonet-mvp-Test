@@ -1,3 +1,4 @@
+//LoginScreen.logic.ts
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { supabase } from '../../../supabase-config';

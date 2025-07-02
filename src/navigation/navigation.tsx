@@ -21,10 +21,10 @@ import MyRoutesScreen from '../screens/MyRoutes';
 import PrivacyScreen from '../screens/Privacy';
 import ActivityDetailScreen from '../screens/ActivityDetail';
 import UserSearchScreen from '../screens/UserSearch';
-import UserProfileScreen from '../screens/UserSearch';
+import UserProfileScreen from '../screens/UserProfile';
 import RecordActivityScreen from '../screens/RecordActivity';
-import SaveActivityScreen from '../screens/RecordActivity';
-import TrailDetailsScreen from '../screens/Explore';
+import SaveActivityScreen from '../screens/SaveActivity';
+import TrailDetailsScreen from '../screens/TrailDetail';
 import CustomDrawerContent from '../components/Drawer';
 import SOSModalTrigger from '../components/SOS';
 

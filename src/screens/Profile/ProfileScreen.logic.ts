@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import mime from 'mime';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { supabase } from '../../../supabase-config';
 import { useAuth } from '../../context/AuthContext';
