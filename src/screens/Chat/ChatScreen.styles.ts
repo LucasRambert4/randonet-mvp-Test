@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
     backgroundColor: '#013220',
+    paddingBottom: 2,
   },
 
   messageBubble: {

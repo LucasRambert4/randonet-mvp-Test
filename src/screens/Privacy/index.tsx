@@ -1,13 +1,10 @@
+// index.tsx
 import React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './PrivacyScreen.styles';
 import { usePrivacyScreen } from './PrivacyScreen.logic';
-import {
-  TopBar,
-  LanguageSection,
-  SwitchRow,
-  InviteButton,
-} from './PrivacyScreen.components';
+import { TopBar, LanguageSection, SwitchRow } from './PrivacyScreen.components';
 
 export default function PrivacyScreen() {
   const {
@@ -17,35 +14,31 @@ export default function PrivacyScreen() {
     badgeLang,
     switchLanguage,
     locationEnabled,
-    setLocationEnabled,
+    handleLocationToggle,
     notificationsEnabled,
-    setNotificationsEnabled,
+    handleNotificationsToggle,
   } = usePrivacyScreen();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    // Exclut le padding de safe area en haut
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <TopBar navigation={navigation} user={user} title={t('privacy.title')} />
-
       <View style={styles.section}>
         <LanguageSection
           t={t}
           badgeLang={badgeLang}
           switchLanguage={switchLanguage}
         />
-
         <SwitchRow
           label={t('privacy.locationLabel')}
           value={locationEnabled}
-          onValueChange={setLocationEnabled}
+          onValueChange={handleLocationToggle}
         />
-
         <SwitchRow
           label={t('privacy.notificationsLabel')}
           value={notificationsEnabled}
-          onValueChange={setNotificationsEnabled}
+          onValueChange={handleNotificationsToggle}
         />
-
-        <InviteButton text={t('privacy.inviteButton')} />
       </View>
     </SafeAreaView>
   );

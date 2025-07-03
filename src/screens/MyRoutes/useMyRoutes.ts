@@ -1,4 +1,3 @@
-// screens/MyRoutesScreen/useMyRoutes.ts
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Alert } from 'react-native';
 import { supabase } from '../../../supabase-config';
@@ -35,6 +34,13 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
               .getPublicUrl(row.activity_id);
             const res = await fetch(`${urlData.publicUrl}?t=${Date.now()}`);
             const json = await res.json();
+
+            const duration = row.estimated_duration
+              ? `${Math.round(row.estimated_duration)} min`
+              : json.duration_seconds < 60
+              ? `${json.duration_seconds} sec`
+              : `${Math.round(json.duration_seconds / 60)} min`;
+
             return {
               id: row.activity_id,
               title: row.name || json.title,
@@ -46,9 +52,7 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
                 row.distance != null
                   ? `${row.distance.toFixed(1)} km`
                   : `${(json.distance_meters / 1000).toFixed(1)} km`,
-              duration: row.estimated_duration
-                ? `${Math.round(row.estimated_duration)} min`
-                : `${Math.round(json.duration_seconds / 60)} min`,
+              duration,
               elevation: json.elevation,
               difficulty: row.difficulty || json.difficulty,
               rating: json.rating,
@@ -85,6 +89,12 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
                 .getPublicUrl(`${user.id}/${f.name}`);
               const res = await fetch(`${urlData.publicUrl}?t=${Date.now()}`);
               const json = await res.json();
+
+              const duration =
+                json.duration_seconds < 60
+                  ? `${json.duration_seconds} sec`
+                  : `${Math.round(json.duration_seconds / 60)} min`;
+
               return {
                 ...json,
                 id: `${user.id}/${f.name}`,
@@ -94,7 +104,7 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
                   i18n.resolvedLanguage
                 ),
                 distance: `${(json.distance_meters / 1000).toFixed(1)} km`,
-                duration: `${Math.round(json.duration_seconds / 60)} min`,
+                duration,
                 elevation: json.elevation,
                 difficulty: json.difficulty,
                 rating: json.rating,

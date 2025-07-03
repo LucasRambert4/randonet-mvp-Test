@@ -5,7 +5,8 @@
   },
   "common": {
     "settings": "Paramètres",
-    "language": "Langue"
+    "language": "Langue",
+    "seconds": "secondes"
   },
   "privacy": {
     "title": "Préférences et confidentialité",
@@ -210,8 +211,16 @@
     "noUsers": "Aucun utilisateur trouvé.",
     "accept": "Accepter",
     "reject": "Refuser",
+    "title": "Recherche d’utilisateurs",
     "pending": "En attente",
     "friend": "Ami",
     "add": "Ajouter"
+  },
+  "nav": {
+    "home": "Accueil",
+    "chat": "Messages",
+    "record": "Nouvelle",
+    "explore": "Explorer",
+    "sos": "Urgence"
   }
 }

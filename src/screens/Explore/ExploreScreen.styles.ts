@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#013220',
   },
   container: { flex: 1, padding: 16 },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 12 },
   input: {
     backgroundColor: '#024d2d',
     padding: 12,
@@ -14,6 +13,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#fff',
   },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#09341f',
+  },
+  title: {
+    fontSize: 20,
+    color: 'white',
+    fontWeight: '600',
+  },
+  avatar: {
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+
   list: { paddingBottom: 20 },
   loader: { marginTop: 20 },
   card: {

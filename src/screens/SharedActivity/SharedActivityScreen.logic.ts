@@ -8,7 +8,7 @@ import { Alert, Share } from 'react-native';
 export default function useSharedActivityLogic() {
   const { user } = useAuth();
   const navigation = useNavigation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [activities, setActivities] = useState<any[]>([]);
   const [saved, setSaved] = useState<string[]>([]);
@@ -18,7 +18,15 @@ export default function useSharedActivityLogic() {
   const [tab, setTab] = useState<'All' | 'User' | 'Friends'>('All');
   const pollingInterval = useRef<NodeJS.Timeout | null>(null);
 
+  const formatDate = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // months 0-indexed
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const fetchSaved = async () => {
+    if (!user) return;
     const { data } = await supabase
       .from('saved_activities')
       .select('activity_id')
@@ -49,10 +57,6 @@ export default function useSharedActivityLogic() {
       const results: any[] = [];
 
       for (const uid of targetUserIds) {
-        const { data: files } = await supabase.storage
-          .from('activities')
-          .list(uid);
-
         const { data: profile } = await supabase
           .from('profiles')
           .select('display_name, avatar_url')
@@ -62,15 +66,17 @@ export default function useSharedActivityLogic() {
         const username = profile?.display_name || t('shared.usernameDefault');
         const avatar_url = profile?.avatar_url || null;
 
-        const sortedFiles = (files || [])
-          .filter((f) => f.name.endsWith('.json'))
-          .sort(
-            (a, b) =>
-              new Date(b.created_at || '').getTime() -
-              new Date(a.created_at || '').getTime()
-          );
+        const { data: files, error } = await supabase.storage
+          .from('activities')
+          .list(uid, {
+            sortBy: { column: 'name', order: 'desc' },
+          });
 
-        for (const file of sortedFiles) {
+        if (error) throw error;
+
+        for (const file of (files || []).filter((f) =>
+          f.name.endsWith('.json')
+        )) {
           const { data: urlData } = supabase.storage
             .from('activities')
             .getPublicUrl(`${uid}/${file.name}`);
@@ -79,6 +85,23 @@ export default function useSharedActivityLogic() {
             const res = await fetch(`${urlData.publicUrl}?t=${Date.now()}`);
             const json = await res.json();
 
+            const distance_km = json.distance_meters
+              ? json.distance_meters / 1000
+              : 0;
+            const distance = `${distance_km.toFixed(1)} km`;
+
+            let duration = '0 min';
+            if (json.duration_seconds != null) {
+              duration =
+                json.duration_seconds < 60
+                  ? `${json.duration_seconds} sec`
+                  : `${Math.round(json.duration_seconds / 60)} min`;
+            }
+
+            const date = json.start_time
+              ? formatDate(new Date(json.start_time))
+              : formatDate(new Date());
+
             results.push({
               ...json,
               id: `${uid}/${file.name}`,
@@ -86,11 +109,9 @@ export default function useSharedActivityLogic() {
               user_id: uid,
               avatar_url,
               username,
-              date: new Date(json.start_time).toLocaleDateString(
-                i18n.resolvedLanguage
-              ),
-              distance: `${(json.distance_meters / 1000).toFixed(1)} km`,
-              duration: `${Math.round(json.duration_seconds / 60)} min`,
+              date,
+              distance,
+              duration,
             });
           } catch {
             console.warn(`Parse failed for ${file.name}`);
@@ -117,6 +138,7 @@ export default function useSharedActivityLogic() {
     useCallback(() => {
       fetchActivities();
       fetchSaved();
+      pollingInterval.current = setInterval(fetchActivities, 30000);
       return () => {
         if (pollingInterval.current) {
           clearInterval(pollingInterval.current);

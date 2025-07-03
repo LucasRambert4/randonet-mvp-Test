@@ -1,5 +1,5 @@
 // ====================
-// Imports
+// Navigation.tsx (force pop to root with key)
 // ====================
 
 import React, { useEffect, useState } from 'react';
@@ -7,10 +7,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../context/AuthContext';
 
-// Screens
 import HomeScreen from '../screens/SharedActivity';
 import ChatScreen from '../screens/Chat';
 import ExploreScreen from '../screens/Explore';
@@ -28,7 +28,6 @@ import TrailDetailsScreen from '../screens/TrailDetail';
 import CustomDrawerContent from '../components/Drawer';
 import SOSModalTrigger from '../components/SOS';
 
-// Shared types for nested stacks
 import {
   HomeStackParamList,
   ChatStackParamList,
@@ -37,21 +36,12 @@ import {
   MainTabParamList,
 } from './types';
 
-// ====================
-// Navigator Instances
-// ====================
-
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const Drawer = createDrawerNavigator();
-
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 const ChatStack = createNativeStackNavigator<ChatStackParamList>();
 const RecordStack = createNativeStackNavigator<RecordStackParamList>();
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>();
-
-// ====================
-// Home Stack Navigator
-// ====================
 
 function HomeStackNavigator() {
   return (
@@ -69,10 +59,6 @@ function HomeStackNavigator() {
   );
 }
 
-// ====================
-// Chat Stack Navigator
-// ====================
-
 function ChatStackNavigator() {
   return (
     <ChatStack.Navigator screenOptions={{ headerShown: false }}>
@@ -81,10 +67,6 @@ function ChatStackNavigator() {
     </ChatStack.Navigator>
   );
 }
-
-// ====================
-// Record Stack Navigator
-// ====================
 
 function RecordStackNavigator() {
   return (
@@ -95,10 +77,6 @@ function RecordStackNavigator() {
   );
 }
 
-// ====================
-// Explore Stack Navigator
-// ====================
-
 function ExploreStackNavigator() {
   return (
     <ExploreStack.Navigator screenOptions={{ headerShown: false }}>
@@ -108,20 +86,13 @@ function ExploreStackNavigator() {
   );
 }
 
-// ====================
-// Dummy Screen for SOS
-// ====================
-
 function DummyScreen() {
   return null;
 }
 
-// ====================
-// Main Tabs Navigator
-// ====================
-
 function MainTabs() {
   const [modalVisible, setModalVisible] = useState(false);
+  const { t } = useTranslation();
 
   const handleComplete = () => {
     setModalVisible(false);
@@ -169,16 +140,79 @@ function MainTabs() {
               />
             );
           },
+          tabBarLabel:
+            {
+              Home: t('nav.home'),
+              Record: t('nav.record'),
+              Chat: t('nav.chat'),
+              Explore: t('nav.explore'),
+              SOS: t('nav.sos'),
+            }[route.name] || route.name,
         })}
       >
-        <Tab.Screen name="Home" component={HomeStackNavigator} />
-        <Tab.Screen name="Chat" component={ChatStackNavigator} />
-        <Tab.Screen name="Record" component={RecordStackNavigator} />
-        <Tab.Screen name="Explore" component={ExploreStackNavigator} />
+        <Tab.Screen
+          name="Home"
+          component={HomeStackNavigator}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              if (navigation.isFocused()) {
+                navigation.navigate('Home', {
+                  screen: 'HomeMain',
+                  key: Math.random().toString(),
+                });
+              }
+            },
+          })}
+        />
+
+        <Tab.Screen
+          name="Chat"
+          component={ChatStackNavigator}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              if (navigation.isFocused()) {
+                navigation.navigate('Chat', {
+                  screen: 'ChatMain',
+                  key: Math.random().toString(),
+                });
+              }
+            },
+          })}
+        />
+
+        <Tab.Screen
+          name="Record"
+          component={RecordStackNavigator}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              if (navigation.isFocused()) {
+                navigation.navigate('Record', {
+                  screen: 'RecordMain',
+                  key: Math.random().toString(),
+                });
+              }
+            },
+          })}
+        />
+
+        <Tab.Screen
+          name="Explore"
+          component={ExploreStackNavigator}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              if (navigation.isFocused()) {
+                navigation.navigate('Explore', {
+                  screen: 'ExploreMain',
+                  key: Math.random().toString(),
+                });
+              }
+            },
+          })}
+        />
+
         <Tab.Screen
           name="SOS"
           component={DummyScreen}
-          options={{ tabBarLabel: 'SOS' }}
           listeners={{
             tabPress: (e) => {
               e.preventDefault();
@@ -191,10 +225,6 @@ function MainTabs() {
   );
 }
 
-// ====================
-// App Drawer Navigator
-// ====================
-
 function AppDrawer() {
   return (
     <Drawer.Navigator
@@ -205,10 +235,6 @@ function AppDrawer() {
     </Drawer.Navigator>
   );
 }
-
-// ====================
-// Root Navigation
-// ====================
 
 export default function Navigation() {
   const { user, loading } = useAuth();

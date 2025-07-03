@@ -26,6 +26,7 @@ export default StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#fff',
+    marginRight: 10,
   },
 
   emptyContainer: {

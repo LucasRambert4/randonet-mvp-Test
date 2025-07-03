@@ -29,6 +29,7 @@ export default function ActivityCard({
           />
           <View>
             <Text style={styles.username}>{item.username}</Text>
+            <Text style={styles.activityTitle}>{item.title}</Text>
             <Text style={styles.meta}>
               {item.date}, {item.location || t('shared.unknown')}
             </Text>

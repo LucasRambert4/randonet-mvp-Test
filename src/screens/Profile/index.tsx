@@ -1,9 +1,17 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, RefreshControl } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  RefreshControl,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import { DrawerActions } from '@react-navigation/native';
 import styles from './ProfileScreen.styles';
 import { useProfileScreen } from './ProfileScreen.logic';
 import {
-  TopBar,
   ProfileSection,
   OptionsList,
   EditModal,
@@ -14,7 +22,23 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <TopBar navigation={logic.navigation} user={logic.user} t={logic.t} />
+      {/* ✅ New top bar */}
+      <View style={styles.topBar}>
+        <Text style={styles.title}>Profile</Text>
+
+        <TouchableOpacity
+          onPress={() => logic.navigation.dispatch(DrawerActions.openDrawer())}
+        >
+          <Image
+            source={{
+              uri:
+                logic.user?.user_metadata?.avatar_url ||
+                'https://via.placeholder.com/40',
+            }}
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
+      </View>
 
       <ScrollView
         style={{ flex: 1 }}

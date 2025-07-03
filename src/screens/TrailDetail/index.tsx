@@ -5,12 +5,47 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import { DrawerActions } from '@react-navigation/native';
 import MapView, { Polyline } from 'react-native-maps';
 import useTrailDetailsLogic from './TrailDetailsScreen.logic';
 import styles from './TrailDetailsScreen.styles';
+
+// ✅ New inline TopBar component — same style as ActivityDetail
+function TopBar({ navigation, user, title, onShare }: any) {
+  return (
+    <View style={styles.topBar}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={24} color="white" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>{title}</Text>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity onPress={onShare} style={{ marginRight: 12 }}>
+          <Feather name="share-2" size={22} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        >
+          <Image
+            source={{
+              uri:
+                user?.user_metadata?.avatar_url ||
+                user?.avatar_url ||
+                'https://via.placeholder.com/40',
+            }}
+            style={styles.avatar} // ✅ Make sure you have avatar style!
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
 
 export default function TrailDetailsScreen() {
   const {
@@ -23,6 +58,7 @@ export default function TrailDetailsScreen() {
     isSaved,
     startActivity,
     firstNode,
+    user, // ✅ Make sure you provide user in logic!
   } = useTrailDetailsLogic();
 
   if (loading) {
@@ -39,15 +75,12 @@ export default function TrailDetailsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.title}>{trail.name}</Text>
-        <TouchableOpacity onPress={shareTrail}>
-          <Feather name="share-2" size={22} color="white" />
-        </TouchableOpacity>
-      </View>
+      <TopBar
+        navigation={navigation}
+        user={user}
+        title={trail.name}
+        onShare={shareTrail}
+      />
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <MapView

@@ -44,10 +44,19 @@ export default function useSaveActivityLogic(user, routeParams, navigation) {
       rating,
       type,
       difficulty,
-      startTime: parsedStartTime?.toISOString() || null,
-      endTime: parsedEndTime?.toISOString() || null,
+      start_time: parsedStartTime?.toISOString() || null, // ✅ same key!
+      end_time: parsedEndTime?.toISOString() || null, // optional
+      duration_seconds:
+        parsedEndTime && parsedStartTime
+          ? Math.max(
+              1,
+              Math.round(
+                (parsedEndTime.getTime() - parsedStartTime.getTime()) / 1000
+              )
+            )
+          : 0,
       route: route || [],
-      distance: distance || 0,
+      distance_meters: distance || 0, // ✅ same key!
       elevation: elevation || 0,
       location: location || '',
       trailId: trailId || null,

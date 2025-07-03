@@ -55,22 +55,25 @@ export default function ChatScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.messagesContainer, { paddingTop: topPadding }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={[styles.messagesContainer, { paddingTop: topPadding, flex: 1 }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20} // adjust if needed
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <MessagesView
-          messages={messages}
-          user={user}
-          flatListRef={flatListRef}
-          handleScroll={handleScroll}
-          newMessage={newMessage}
-          setNewMessage={setNewMessage}
-          sendMessage={sendMessage}
-          selectedConversation={selectedConversation}
-          setSelectedConversation={setSelectedConversation}
-          getOtherUserName={getOtherUserName}
-        />
+        <View style={{ flex: 1 }}>
+          <MessagesView
+            messages={messages}
+            user={user}
+            flatListRef={flatListRef}
+            handleScroll={handleScroll}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            sendMessage={sendMessage}
+            selectedConversation={selectedConversation}
+            setSelectedConversation={setSelectedConversation}
+            getOtherUserName={getOtherUserName}
+          />
+        </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );

@@ -11,14 +11,19 @@
     "deleted": "Supprimé",
     "user": "Utilisateur",
     "unknown": "Inconnu",
-    "minutes": "min"
+    "minutes": "min",
+    "seconds": "seconds"
   },
   "privacy": {
     "title": "Preferences & Privacy",
     "languageLabel": "App Language",
     "locationLabel": "Location",
     "notificationsLabel": "Notifications",
-    "inviteButton": "Invite a contact"
+    "inviteButton": "Invite a contact",
+    "disableLocationManual": "Please disable location permissions manually in your device settings.",
+    "disableNotificationsManual": "Please disable notifications manually in your device settings.",
+    "locationDenied": "Location permission denied.",
+    "notificationsDenied": "Notification permission denied."
   },
   "activityDetail": {
     "title": "Activity Detail",
@@ -215,8 +220,16 @@
     "noUsers": "No users found.",
     "accept": "Accept",
     "reject": "Reject",
+    "title": "User Search",
     "pending": "Pending",
     "friend": "Friend",
     "add": "Add"
+  },
+  "nav": {
+    "home": "Home",
+    "chat": "Chat",
+    "record": "Record",
+    "explore": "Explore",
+    "sos": "SOS"
   }
 }

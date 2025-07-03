@@ -1,18 +1,32 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, Entypo } from '@expo/vector-icons';
+import { DrawerActions } from '@react-navigation/native';
 import styles from './ActivityDetailScreen.styles';
 
-export const TopBar = ({ navigation, ownerInfo, title }: any) => (
+// Helper to get avatar URL with fallback
+const getAvatarUrl = (user: any) => {
+  const url = user?.user_metadata?.avatar_url || user?.avatar_url;
+  return url || 'https://via.placeholder.com/40';
+};
+
+export const TopBar = ({ navigation, user, title }: any) => (
   <View style={styles.topBar}>
     <TouchableOpacity onPress={() => navigation.goBack()}>
       <Ionicons name="arrow-back" size={24} color="white" />
     </TouchableOpacity>
     <Text style={styles.title}>{title}</Text>
-    <Image
-      source={{ uri: ownerInfo.avatar_url || 'https://via.placeholder.com/40' }}
-      style={styles.avatar}
-    />
+    <TouchableOpacity
+      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+    >
+      <Image
+        source={{
+          uri:
+            user?.user_metadata?.avatar_url || 'https://via.placeholder.com/40',
+        }}
+        style={styles.avatar}
+      />
+    </TouchableOpacity>
   </View>
 );
 
@@ -31,9 +45,7 @@ export const HeaderRow = ({
   <View style={styles.headerRow}>
     <View style={styles.userInfo}>
       <Image
-        source={{
-          uri: ownerInfo.avatar_url || 'https://via.placeholder.com/40',
-        }}
+        source={{ uri: getAvatarUrl(ownerInfo) }}
         style={styles.avatarSmall}
       />
       <View>
@@ -91,6 +103,11 @@ export const HeaderRow = ({
 export const StatsGrid = ({ t, activityData }: any) => (
   <View style={styles.statsGrid}>
     <View style={styles.statBox}>
+      <Text style={styles.label}>{t('activityDetail.title')}</Text>
+      <Text style={styles.value}>{activityData.title}</Text>
+    </View>
+
+    <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.distance')}</Text>
       <Text style={styles.value}>
         {(activityData.distance_meters / 1000).toFixed(1)} km
@@ -99,9 +116,14 @@ export const StatsGrid = ({ t, activityData }: any) => (
     <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.duration')}</Text>
       <Text style={styles.value}>
-        {Math.round(activityData.duration_seconds / 60)} {t('common.minutes')}
+        {activityData.duration_seconds < 60
+          ? `${activityData.duration_seconds} ${t('common.seconds')}`
+          : `${Math.round(activityData.duration_seconds / 60)} ${t(
+              'common.minutes'
+            )}`}
       </Text>
     </View>
+
     <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.elevation')}</Text>
       <Text style={styles.value}>{activityData.elevation || 0} m</Text>
@@ -110,6 +132,7 @@ export const StatsGrid = ({ t, activityData }: any) => (
       <Text style={styles.label}>{t('activityDetail.difficulty')}</Text>
       <Text style={styles.value}>{activityData.difficulty}</Text>
     </View>
+
     <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.type')}</Text>
       <Text style={styles.value}>{activityData.type}</Text>

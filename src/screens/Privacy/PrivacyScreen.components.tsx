@@ -1,3 +1,4 @@
+// PrivacyScreen.components.tsx
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, Switch } from 'react-native';
 import { DrawerActions } from '@react-navigation/native';
@@ -9,9 +10,7 @@ export const TopBar = ({ navigation, user, title }: any) => (
     <TouchableOpacity onPress={() => navigation.goBack()}>
       <Ionicons name="arrow-back" size={24} color="white" />
     </TouchableOpacity>
-
     <Text style={styles.title}>{title}</Text>
-
     <TouchableOpacity
       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
     >
@@ -70,10 +69,4 @@ export const SwitchRow = ({ label, value, onValueChange }: any) => (
       trackColor={{ false: '#555', true: '#28a745' }}
     />
   </View>
-);
-
-export const InviteButton = ({ text }: any) => (
-  <TouchableOpacity style={styles.inviteButton}>
-    <Text style={styles.inviteText}>{text}</Text>
-  </TouchableOpacity>
 );

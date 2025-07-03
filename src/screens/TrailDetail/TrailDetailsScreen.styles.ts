@@ -3,13 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
+    backgroundColor: '#0d3a27',
   },
   startButton: {
     flexDirection: 'row',
@@ -20,7 +14,16 @@ export default StyleSheet.create({
     borderRadius: 8,
     marginTop: 12,
   },
-
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: '#0d3a27', // same as container!
+    zIndex: 10,
+  },
   startText: {
     color: '#ffffff',
     marginLeft: 8,

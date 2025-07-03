@@ -62,13 +62,6 @@ const styles = StyleSheet.create({
   langSelectedText: {
     color: '#013220',
   },
-  inviteButton: {
-    marginTop: 10,
-  },
-  inviteText: {
-    color: 'white',
-    fontSize: 16,
-  },
 });
 
 export default styles;

@@ -6,15 +6,32 @@ import {
   FlatList,
   ActivityIndicator,
   SafeAreaView,
+  TouchableOpacity,
+  Image,
   Platform,
 } from 'react-native';
-import TrailCard from './TrailCard';
+import { DrawerActions } from '@react-navigation/native';
 import useExploreScreenLogic from './ExploreScreen.logic';
 import styles from './ExploreScreen.styles';
 
 export default function ExploreScreen() {
-  const { t, search, setSearch, loading, visibleAndSorted, renderTrail } =
-    useExploreScreenLogic();
+  const logic = useExploreScreenLogic();
+  const {
+    t,
+    navigation,
+    search,
+    setSearch,
+    loading,
+    visibleAndSorted,
+    renderTrail,
+  } = useExploreScreenLogic();
+
+  // 🔑 Replace this with your real user later:
+  const user = {
+    user_metadata: {
+      avatar_url: 'https://via.placeholder.com/40',
+    },
+  };
 
   return (
     <SafeAreaView
@@ -24,7 +41,25 @@ export default function ExploreScreen() {
       ]}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>{t('explore.title')}</Text>
+        {/* ✅ New custom top bar */}
+        <View style={styles.topBar}>
+          <Text style={styles.title}>Explore</Text>
+
+          <TouchableOpacity
+            onPress={() =>
+              logic.navigation.dispatch(DrawerActions.openDrawer())
+            }
+          >
+            <Image
+              source={{
+                uri:
+                  logic.user?.user_metadata?.avatar_url ||
+                  'https://via.placeholder.com/40',
+              }}
+              style={styles.avatar}
+            />
+          </TouchableOpacity>
+        </View>
 
         <TextInput
           placeholder={t('explore.searchPlaceholder')}

@@ -92,10 +92,18 @@ export const useActivityDetail = () => {
   const shareActivity = async () => {
     if (!activityData) return;
     try {
+      const duration =
+        activityData.duration_seconds < 60
+          ? `${activityData.duration_seconds} sec`
+          : `${Math.max(
+              1,
+              Math.round(activityData.duration_seconds / 60)
+            )} min`;
+
       const message = t('activityDetail.shareMessage', {
         location: activityData.location,
         km: (activityData.distance_meters / 1000).toFixed(1),
-        minutes: Math.max(1, Math.round(activityData.duration_seconds / 60)),
+        duration,
       });
       await Share.share({ message });
     } catch (error) {

@@ -1,4 +1,3 @@
-//ChatScreen.logic.ts
 import { useEffect, useState, useRef } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
@@ -63,22 +62,11 @@ export default function useChatScreenLogic() {
   const sendMessage = async () => {
     if (newMessage.trim() === '' || !selectedConversation) return;
 
-    const tempMessage = {
-      id: `temp-${Date.now()}`,
-      conversation_id: selectedConversation.id,
-      sender_id: user.id,
-      content: newMessage,
-      created_at: new Date().toISOString(),
-    };
-
-    setMessages((prev) => [...prev, tempMessage]);
-    flatListRef.current?.scrollToEnd({ animated: true });
-
     await supabase.from('messages').insert([
       {
         conversation_id: selectedConversation.id,
         sender_id: user.id,
-        content: newMessage,
+        content: newMessage.trim(),
       },
     ]);
 
@@ -103,7 +91,10 @@ export default function useChatScreenLogic() {
           filter: `conversation_id=eq.${selectedConversation.id}`,
         },
         (payload) => {
-          setMessages((prev) => [...prev, payload.new]);
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
           if (isAutoScrollRef.current) {
             flatListRef.current?.scrollToEnd({ animated: true });
           }

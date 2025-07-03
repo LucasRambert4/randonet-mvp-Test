@@ -14,6 +14,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#09341f',
     padding: 15,
   },
+  activityTitle: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 4,
+  },
   title: {
     fontSize: 18,
     color: 'white',
