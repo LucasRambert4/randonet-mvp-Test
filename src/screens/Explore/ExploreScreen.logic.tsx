@@ -10,8 +10,13 @@ import { TrailCard } from './ExploreScreen.components';
 // helpers
 import { formatDifficulty } from './tests/formatDifficulty';
 import { getVisibleAndSorted } from './tests/getVisibleAndSorted';
+import { useAuth } from '../../context/AuthContext';
 
 export default function useExploreScreenLogic() {
+  const { user } = useAuth();
+  const avatarUrl =
+    user?.user_metadata?.avatar_url || 'https://via.placeholder.com/40';
+
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -70,6 +75,7 @@ export default function useExploreScreenLogic() {
 
   return {
     t,
+    avatarUrl,
     navigation,
     search,
     setSearch,

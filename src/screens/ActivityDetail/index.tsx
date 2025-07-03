@@ -1,3 +1,5 @@
+// src/screens/ActivityDetail/index.tsx
+
 import React from 'react';
 import {
   SafeAreaView,
@@ -6,8 +8,10 @@ import {
   View,
 } from 'react-native';
 import MapView, { Polyline } from 'react-native-maps';
+
 import styles from './ActivityDetailScreen.styles';
 import { useActivityDetail } from './ActivityDetail.logic';
+
 import {
   TopBar,
   HeaderRow,
@@ -29,6 +33,7 @@ export default function ActivityDetailScreen() {
     toggleSave,
     isSaved,
     confirmDelete,
+    avatarUrl, // ✅ From logic
   } = useActivityDetail();
 
   if (loading || !activityData || !ownerInfo) {
@@ -45,10 +50,11 @@ export default function ActivityDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      {/* ✅ New reusable TopBar */}
       <TopBar
-        navigation={navigation}
-        ownerInfo={ownerInfo}
         title={t('activityDetail.title')}
+        avatarUrl={avatarUrl}
+        navigation={navigation}
       />
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -78,6 +84,7 @@ export default function ActivityDetailScreen() {
         <View style={styles.contentBox}>
           <HeaderRow
             ownerInfo={ownerInfo}
+            avatarUrl={avatarUrl}
             activityData={activityData}
             loc={loc}
             shareActivity={shareActivity}

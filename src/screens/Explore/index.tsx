@@ -18,6 +18,7 @@ export default function ExploreScreen() {
   const logic = useExploreScreenLogic();
   const {
     t,
+    avatarUrl,
     navigation,
     search,
     setSearch,
@@ -25,13 +26,6 @@ export default function ExploreScreen() {
     visibleAndSorted,
     renderTrail,
   } = useExploreScreenLogic();
-
-  // 🔑 Replace this with your real user later:
-  const user = {
-    user_metadata: {
-      avatar_url: 'https://via.placeholder.com/40',
-    },
-  };
 
   return (
     <SafeAreaView
@@ -50,14 +44,7 @@ export default function ExploreScreen() {
               logic.navigation.dispatch(DrawerActions.openDrawer())
             }
           >
-            <Image
-              source={{
-                uri:
-                  logic.user?.user_metadata?.avatar_url ||
-                  'https://via.placeholder.com/40',
-              }}
-              style={styles.avatar}
-            />
+            <Image source={{ uri: avatarUrl }} style={styles.avatar} />
           </TouchableOpacity>
         </View>
 

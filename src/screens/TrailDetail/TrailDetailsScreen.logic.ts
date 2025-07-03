@@ -51,6 +51,7 @@ export default function useTrailDetailsLogic() {
       const insertObj = {
         user_id: user.id,
         activity_id: trail.id,
+        source: 'trail',
         name: trail.name || 'Unnamed Trail',
         summary: trail.summary || '',
         distance: trail.distance || 0,

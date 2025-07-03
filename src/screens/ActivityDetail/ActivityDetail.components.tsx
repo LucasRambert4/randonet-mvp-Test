@@ -1,37 +1,40 @@
+// src/screens/ActivityDetail/ActivityDetail.components.tsx
+
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, Entypo } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import styles from './ActivityDetailScreen.styles';
 
-// Helper to get avatar URL with fallback
-const getAvatarUrl = (user: any) => {
-  const url = user?.user_metadata?.avatar_url || user?.avatar_url;
-  return url || 'https://via.placeholder.com/40';
-};
-
-export const TopBar = ({ navigation, user, title }: any) => (
+// ✅ NEW: TopBar for back + title + drawer
+export const TopBar = ({
+  title,
+  avatarUrl,
+  navigation,
+}: {
+  title: string;
+  avatarUrl: string;
+  navigation: any;
+}) => (
   <View style={styles.topBar}>
     <TouchableOpacity onPress={() => navigation.goBack()}>
-      <Ionicons name="arrow-back" size={24} color="white" />
+      <Ionicons name="arrow-back" size={24} color="#fff" />
     </TouchableOpacity>
-    <Text style={styles.title}>{title}</Text>
+
+    <Text style={styles.topBarTitle}>{title}</Text>
+
     <TouchableOpacity
       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
     >
-      <Image
-        source={{
-          uri:
-            user?.user_metadata?.avatar_url || 'https://via.placeholder.com/40',
-        }}
-        style={styles.avatar}
-      />
+      <Image source={{ uri: avatarUrl }} style={styles.avatar} />
     </TouchableOpacity>
   </View>
 );
 
+// ✅ Your existing HeaderRow for activity owner details
 export const HeaderRow = ({
   ownerInfo,
+  avatarUrl,
   activityData,
   loc,
   shareActivity,
@@ -44,10 +47,7 @@ export const HeaderRow = ({
 }: any) => (
   <View style={styles.headerRow}>
     <View style={styles.userInfo}>
-      <Image
-        source={{ uri: getAvatarUrl(ownerInfo) }}
-        style={styles.avatarSmall}
-      />
+      <Image source={{ uri: avatarUrl }} style={styles.avatar} />
       <View>
         <Text style={styles.username}>{ownerInfo.display_name}</Text>
         <Text style={styles.meta}>
@@ -100,6 +100,7 @@ export const HeaderRow = ({
   </View>
 );
 
+// ✅ Your existing StatsGrid for activity stats
 export const StatsGrid = ({ t, activityData }: any) => (
   <View style={styles.statsGrid}>
     <View style={styles.statBox}>
@@ -113,6 +114,7 @@ export const StatsGrid = ({ t, activityData }: any) => (
         {(activityData.distance_meters / 1000).toFixed(1)} km
       </Text>
     </View>
+
     <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.duration')}</Text>
       <Text style={styles.value}>
@@ -128,6 +130,7 @@ export const StatsGrid = ({ t, activityData }: any) => (
       <Text style={styles.label}>{t('activityDetail.elevation')}</Text>
       <Text style={styles.value}>{activityData.elevation || 0} m</Text>
     </View>
+
     <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.difficulty')}</Text>
       <Text style={styles.value}>{activityData.difficulty}</Text>
@@ -137,6 +140,7 @@ export const StatsGrid = ({ t, activityData }: any) => (
       <Text style={styles.label}>{t('activityDetail.type')}</Text>
       <Text style={styles.value}>{activityData.type}</Text>
     </View>
+
     <View style={styles.statBox}>
       <Text style={styles.label}>{t('activityDetail.rating')}</Text>
       <View style={{ flexDirection: 'row' }}>
@@ -153,6 +157,7 @@ export const StatsGrid = ({ t, activityData }: any) => (
   </View>
 );
 
+// ✅ Your existing DescriptionBox for optional description
 export const DescriptionBox = ({ t, description }: any) =>
   description ? (
     <View style={{ marginTop: 20 }}>

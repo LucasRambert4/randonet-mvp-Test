@@ -9,10 +9,23 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#09341f',
-    padding: 15,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#0d3a27', // or match your theme
+  },
+
+  topBarTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
   },
   activityTitle: {
     color: 'white',
