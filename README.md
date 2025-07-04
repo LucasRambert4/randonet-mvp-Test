@@ -1,26 +1,35 @@
-# Randonet MVP – React Native Expo Project
+# 📄 Randonet MVP – React Native Expo Project
 
-This guide will help you set up and run the Randonet MVP project on your local machine using React Native and Expo.
+This guide explains how to **set up, run, and develop** the **Randonet MVP** project on your local machine using **React Native** and **Expo**.
 
-## Prerequisites
+---
 
-Before you begin, ensure you have the following installed:
+## ✅ Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or later recommended)
-- npm or [Yarn](https://classic.yarnpkg.com/) (npm comes with Node.js)
+Before you start, make sure you have these installed:
+
+- [Node.js](https://nodejs.org/) (v16+ recommended)
+- **npm** (comes with Node.js) or [Yarn](https://classic.yarnpkg.com/)
 - [Git](https://git-scm.com/)
-- Expo CLI (install with `npm install -g expo-cli`)
+- Expo CLI:  
+  ```bash
+  npm install -g expo-cli
+  ```
 
-## Getting Started
+---
 
-### 1. Clone the Repository
+## 🚀 Getting Started
+
+### 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/LucasRambert4/randonet-mvp-Test.git
 cd randonet-mvp-Test
 ```
 
-### 2. Install Dependencies
+---
+
+### 2️⃣ Install Dependencies
 
 ```bash
 npm install
@@ -28,13 +37,21 @@ npm install
 yarn install
 ```
 
-### 3. Configure Environment Variables (if needed)
+---
 
-If the project uses environment variables, create a `.env` file in the root directory based on the `.env.example` file (if provided).
+### 3️⃣ Configure Environment Variables
 
-### 4. Run the Project
+If the project uses **environment variables**, create a `.env` file in the root directory based on `.env.example` (if available):
 
-Start the development server:
+```bash
+cp .env.example .env
+```
+
+🔒 **Never commit your `.env` file!** It should stay **private** and be listed in `.gitignore`.
+
+---
+
+### 4️⃣ Start the Development Server
 
 ```bash
 expo start
@@ -44,48 +61,66 @@ npm start
 yarn start
 ```
 
-This will open the Expo Developer Tools in your browser.
+This opens the **Expo Developer Tools** in your browser.
 
-### 5. Run on Your Device
+---
 
-You have several options to run the app:
+### 5️⃣ Run the App on a Device
 
-#### Option A: Run on Android Emulator
-1. Make sure you have an Android emulator set up.
-2. In the Expo Developer Tools, press `a` or click "Run on Android device/emulator".
+You can run the app in **three ways**:
 
-#### Option B: Run on iOS Simulator (macOS only)
-1. Make sure you have Xcode installed.
-2. In the Expo Developer Tools, press `i` or click "Run on iOS simulator".
+#### ✅ **Option A: Android Emulator**
+1. Make sure your Android emulator is running.
+2. In Expo Developer Tools, press `a` or click **Run on Android device/emulator**.
 
-#### Option C: Run on Physical Device
-1. Install the **Expo Go** app on your iOS or Android device.
-2. Scan the QR code shown in the Expo Developer Tools with your device's camera.
+#### 🍏 **Option B: iOS Simulator** _(macOS only)_
+1. Ensure **Xcode** is installed.
+2. In Expo Developer Tools, press `i` or click **Run on iOS simulator**.
+
+#### 📱 **Option C: Physical Device**
+1. Install **Expo Go** on your iOS or Android device.
+2. Scan the QR code shown in Expo Developer Tools.
 3. The app will open in Expo Go.
 
-## Additional Commands
+---
 
-- `expo doctor`: Checks your project for common issues.
-- `expo prebuild`: Generates native iOS and Android project files.
-- `expo run:android`: Builds and runs the app on Android.
-- `expo run:ios`: Builds and runs the app on iOS (macOS only).
+## 📂 Deliverables
 
-## Troubleshooting
+All project deliverables — including source code, assets, and documentation — are located in this repository:  
+**➡️ [Randonet MVP GitHub Repo](https://github.com/LucasRambert4/randonet-mvp-Test.git)**
 
-If you encounter issues:
-1. Make sure all dependencies are installed correctly.
-2. Clear the cache with:
+If you need to share the **compiled builds** or APKs, add them to a `deliverables/` folder and **update this README** with instructions to find or download them.
 
-```bash
-expo start -c
-# or
-npm start -- --clear
-```
+---
 
-3. Check the [Expo documentation](https://docs.expo.dev/) for common issues.
+## ⚙️ Additional Commands
 
-## Support
+- `expo doctor` — Diagnose common issues.
+- `expo prebuild` — Generate native iOS & Android project files.
+- `expo run:android` — Build & run on Android.
+- `expo run:ios` — Build & run on iOS _(macOS only)_.
 
-For any issues with the project, please open an issue on the [GitHub repository](https://github.com/LucasRambert4/YearProject/issues).
+---
 
-Happy coding! 🚀
+## 🛠️ Troubleshooting
+
+If something doesn’t work:
+1. Make sure all dependencies are installed.
+2. Clear the Expo cache:
+   ```bash
+   expo start -c
+   # or
+   npm start -- --clear
+   ```
+3. Refer to the [Expo Docs](https://docs.expo.dev/) for help.
+
+---
+
+## 🗂️ Support
+
+Need help?  
+➡️ Open an issue here: [GitHub Issues](https://github.com/LucasRambert4/YearProject/issues)
+
+---
+
+**Happy coding! 🚀**
