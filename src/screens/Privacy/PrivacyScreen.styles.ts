@@ -1,4 +1,3 @@
-// PrivacyScreen.styles.ts
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({

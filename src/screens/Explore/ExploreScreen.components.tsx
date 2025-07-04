@@ -1,5 +1,3 @@
-// src/screens/Explore/ExploreScreen.components.tsx
-
 import React, { useEffect, useMemo } from 'react';
 import { View, Text, TouchableOpacity, Image, Animated } from 'react-native';
 import MapView, { Polyline } from 'react-native-maps';

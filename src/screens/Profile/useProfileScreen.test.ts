@@ -1,8 +1,5 @@
 import { describe, it, expect, jest } from '@jest/globals';
 
-// ---------------------------
-// Mocks
-// ---------------------------
 const supabase = {
   auth: {
     updateUser: jest.fn(),
@@ -21,10 +18,6 @@ const supabase = {
 global.Alert = { alert: jest.fn() };
 global.fetch = jest.fn();
 const setUserManually = jest.fn();
-
-// ---------------------------
-// Example extracted helpers
-// ---------------------------
 
 async function _updateName() {
   const { error } = await supabase.auth.updateUser({
@@ -71,9 +64,6 @@ async function _deleteAccount() {
   Alert.alert('Deleted');
 }
 
-// ---------------------------
-// Tests
-// ---------------------------
 describe('useProfileScreen Logic', () => {
   it('updates name successfully', async () => {
     supabase.auth.updateUser.mockResolvedValueOnce({});

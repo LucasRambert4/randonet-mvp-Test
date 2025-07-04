@@ -20,7 +20,6 @@ export default function useUserProfileLogic() {
   useEffect(() => {
     const fetchProfileAndActivities = async () => {
       try {
-        // ✅ Get friend's profile
         const { data: prof, error: profileError } = await supabase
           .from('profiles')
           .select('display_name, avatar_url')
@@ -34,7 +33,6 @@ export default function useUserProfileLogic() {
           avatar: prof?.avatar_url || '',
         });
 
-        // ✅ Get friend's activities
         const { data: files } = await supabase.storage
           .from('activities')
           .list(friendId);

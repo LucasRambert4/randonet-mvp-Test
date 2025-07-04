@@ -1,4 +1,3 @@
-// screens/MyRoutesScreen/index.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -12,7 +11,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import SearchBar from '../../components/Search';
-import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import useMyRoutes from './useMyRoutes';

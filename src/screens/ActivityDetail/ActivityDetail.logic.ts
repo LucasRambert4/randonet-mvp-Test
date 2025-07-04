@@ -1,5 +1,3 @@
-// src/screens/ActivityDetail/ActivityDetail.logic.ts
-
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -19,7 +17,6 @@ export function useActivityDetail() {
   const [routePath, setRoutePath] = useState<any[]>([]);
   const [isSaved, setIsSaved] = useState(false);
 
-  // ✅ Extract avatarUrl exactly like ExploreScreen
   const avatarUrl =
     user?.user_metadata?.avatar_url || 'https://via.placeholder.com/40';
 
@@ -31,35 +28,30 @@ export function useActivityDetail() {
       try {
         setLoading(true);
 
-        // Split `activityId` => `userId/filename`
         const [userId, fileName] = activityId.split('/');
 
-        // Fetch owner profile from `profiles` table
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
-          .select('*')
+          .select('id, display_name, avatar_url')
           .eq('id', userId)
           .maybeSingle();
 
-        if (profileError) {
-          throw profileError;
-        }
+        console.log('Fetched profile:', profile);
+
+        if (profileError) throw profileError;
+
         setOwnerInfo(profile);
 
-        // Get public URL for activity file
         const { data: urlData, error: urlError } = supabase.storage
           .from('activities')
           .getPublicUrl(`${userId}/${fileName}`);
 
-        if (urlError) {
-          throw urlError;
-        }
+        if (urlError) throw urlError;
 
         const res = await fetch(`${urlData.publicUrl}?t=${Date.now()}`);
         const json = await res.json();
         setActivityData(json);
 
-        // Extract route path if geojson is available
         if (json.geojson?.features) {
           const coords = json.geojson.features.flatMap((f: any) =>
             f.geometry.coordinates.map((c: any) => ({
@@ -70,7 +62,6 @@ export function useActivityDetail() {
           setRoutePath(coords);
         }
 
-        // Check if the current user has saved this activity
         if (user) {
           const { data: savedData } = await supabase
             .from('saved_activities')
@@ -124,7 +115,6 @@ export function useActivityDetail() {
         .eq('activity_id', activityId);
       setIsSaved(false);
     } else {
-      // Safely extract values or fallback defaults
       const safeName = activityData?.name || 'Untitled Activity';
       const safeSummary = activityData?.summary || '';
       const safeDistance =
@@ -186,6 +176,13 @@ export function useActivityDetail() {
     );
   };
 
+  const ownerAvatarUrl =
+    ownerInfo?.id === user?.id
+      ? avatarUrl
+      : ownerInfo?.avatar_url || 'https://via.placeholder.com/40';
+
+  console.log('Resolved ownerAvatarUrl:', ownerAvatarUrl);
+
   return {
     t,
     loc,
@@ -199,6 +196,7 @@ export function useActivityDetail() {
     toggleSave,
     isSaved,
     confirmDelete,
-    avatarUrl, // ✅ export for the top bar
+    avatarUrl,
+    ownerAvatarUrl,
   };
 }

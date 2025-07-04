@@ -1,4 +1,3 @@
-
 import { describe, it, expect, jest } from '@jest/globals';
 
 const single = jest.fn();
@@ -9,7 +8,10 @@ const supabase = { from };
 async function fetchActivity(activityId: string) {
   if (!activityId) return null;
   const [ownerId, filename] = activityId.split('/');
-  const { data, error } = await supabase.from('activities').select('*').single();
+  const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .single();
   if (error) throw new Error('Fetch error');
   return data;
 }

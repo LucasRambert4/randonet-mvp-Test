@@ -1,10 +1,7 @@
 import { describe, it, expect, jest } from '@jest/globals';
 
-// ---------------------------
-// Full, correct supabase mock
-// ---------------------------
 const eq = jest.fn();
-eq.mockReturnValue({ eq }); // <-- this makes .eq().eq() work
+eq.mockReturnValue({ eq });
 
 const deleteFn = jest.fn(() => ({ eq }));
 const select = jest.fn(() => ({ eq }));
@@ -24,15 +21,9 @@ const supabase = {
   },
 };
 
-// ---------------------------
-// Global mocks
-// ---------------------------
 global.fetch = jest.fn();
 global.Alert = { alert: jest.fn() };
 
-// ---------------------------
-// Extracted helpers
-// ---------------------------
 async function _fetchSavedActivities(userId: string) {
   const { data: saved } = await supabase
     .from('saved_activities')
@@ -72,9 +63,6 @@ async function _handleDeleteSaved(userId: string, activityId: string) {
   Alert.alert('Deleted');
 }
 
-// ---------------------------
-// The actual tests
-// ---------------------------
 describe('useMyRoutes Logic', () => {
   it('fetches saved activities', async () => {
     eq.mockResolvedValueOnce({

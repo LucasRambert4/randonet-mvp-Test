@@ -8,7 +8,6 @@ export default function useLoaderScreenLogic() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Loop scale (pulse)
     Animated.loop(
       Animated.sequence([
         Animated.timing(scaleAnim, {
@@ -26,7 +25,6 @@ export default function useLoaderScreenLogic() {
       ])
     ).start();
 
-    // Fade-in text
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1600,

@@ -1,4 +1,3 @@
-// src/screens/Explore/tests/visibleAndSorted.test.ts
 import { getVisibleAndSorted } from './getVisibleAndSorted';
 
 describe('getVisibleAndSorted', () => {
@@ -23,7 +22,6 @@ describe('getVisibleAndSorted', () => {
     },
   ];
 
-  // Simule formatDifficulty comme une fonction identité pour garder simple
   const formatDifficulty = (raw?: string) => raw || '';
 
   it('filters trails by search text', () => {

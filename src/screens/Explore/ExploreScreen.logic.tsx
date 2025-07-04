@@ -1,5 +1,3 @@
-// src/screens/Explore/ExploreScreen.logic.tsx
-
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
@@ -7,7 +5,6 @@ import { fetchTrailsIledeFrance, Trail } from '../../services/trailsService';
 
 import { TrailCard } from './ExploreScreen.components';
 
-// helpers
 import { formatDifficulty } from './tests/formatDifficulty';
 import { getVisibleAndSorted } from './tests/getVisibleAndSorted';
 import { useAuth } from '../../context/AuthContext';

@@ -6,33 +6,20 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Trail } from '../../services/trailsService';
 import { LOCAL_TRAILS } from '../../services/localTrails';
 
-/**
- * ✅ Custom hook for fetching either:
- *  - Completed activities owned by the current user
- *  - Saved activities bookmarked by the current user
- *
- * @param user - The current authenticated user object
- * @param tab - Either "Completed" or "Saved" determines query logic
- */
 export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
 
-  // Stores activities from storage owned by the user
   const [completedActivities, setCompletedActivities] = useState<any[]>([]);
-  // Stores activities that the user has saved/bookmarked
+
   const [savedActivities, setSavedActivities] = useState<any[]>([]);
-  // Loading flag for spinner
+
   const [loading, setLoading] = useState(false);
-  // Refreshing flag for pull-to-refresh
+
   const [refreshing, setRefreshing] = useState(false);
 
-  // Interval for auto-polling every 30s when screen is focused
   const pollingInterval = useRef<NodeJS.Timeout | null>(null);
 
-  /**
-   * ✅ Core function: Fetch either "Saved" or "Completed" activities
-   */
   const fetchActivities = async () => {
     if (!user) return;
 
@@ -40,7 +27,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
       if (!refreshing) setLoading(true);
 
       if (tab === 'Saved') {
-        // ✅ Get all saved activities
         const { data: saved, error } = await supabase
           .from('saved_activities')
           .select('*')
@@ -51,7 +37,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
         const results = await Promise.all(
           (saved || []).map(async (row) => {
             if (row.source === 'activity') {
-              // ✅ Real uploaded activity → fetch JSON from Storage
               const { data: urlData } = supabase.storage
                 .from('activities')
                 .getPublicUrl(row.activity_id);
@@ -86,7 +71,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
                 nodes: row.nodes || json.geojson || [],
               };
             } else if (row.source === 'trail') {
-              // ✅ Saved local trail → find in LOCAL_TRAILS
               const local = LOCAL_TRAILS.find((t) => t.id === row.activity_id);
               if (!local) return null;
 
@@ -99,22 +83,22 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
                 source: 'trail',
                 title: row.name || local.name || 'Untitled Trail',
                 location: row.summary || local.summary || '',
-                date: '', // optional: local trails may not have date
+                date: '',
                 distance:
                   row.distance != null
                     ? `${row.distance.toFixed(1)} km`
                     : `${local.distance.toFixed(1)} km`,
                 duration,
-                elevation: null, // optional: add if local trail has it
+                elevation: null,
                 difficulty: row.difficulty || local.difficulty || 'unknown',
-                rating: null, // optional: no rating for local
+                rating: null,
                 type: 'Trail',
-                start_time: '', // optional: local trail may not have start time
+                start_time: '',
                 nodes: row.nodes || local.nodes || [],
               };
             }
 
-            return null; // fallback
+            return null;
           })
         );
 
@@ -128,7 +112,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
             )
         );
       } else {
-        // ✅ If viewing Completed (always uploaded)
         const { data: files, error } = await supabase.storage
           .from('activities')
           .list(user.id, {
@@ -192,11 +175,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
     }
   };
 
-  /**
-   * ✅ Handles actual deletion:
-   * - If tab is Saved: removes from `saved_activities` table
-   * - If tab is Completed: removes JSON file from storage bucket
-   */
   const handleDelete = async (activity: any) => {
     try {
       if (tab === 'Saved') {
@@ -216,9 +194,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
     }
   };
 
-  /**
-   * ✅ Shows confirmation alert before actual deletion.
-   */
   const confirmDelete = (activity: any) => {
     Alert.alert(
       t('myRoutes.confirmDeleteTitle'),
@@ -234,19 +209,11 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
     );
   };
 
-  /**
-   * ✅ Pull-to-refresh logic.
-   */
   const onRefresh = () => {
     setRefreshing(true);
     fetchActivities();
   };
 
-  /**
-   * ✅ Navigates when a user taps a route.
-   * - Saved => opens TrailDetails in Explore stack
-   * - Completed => opens ActivityDetail in Home stack
-   */
   const handleActivityPress = (activity, tab) => {
     if (tab === 'Saved') {
       if (activity.source === 'trail') {
@@ -268,16 +235,10 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
     }
   };
 
-  /**
-   * ✅ Runs initially when mounted or when user/tab changes.
-   */
   useEffect(() => {
     if (user) fetchActivities();
   }, [user, tab]);
 
-  /**
-   * ✅ Re-fetch when screen is focused + sets up auto polling.
-   */
   useFocusEffect(
     useCallback(() => {
       if (user) {
@@ -294,9 +255,6 @@ export default function useMyRoutes(user: any, tab: 'Completed' | 'Saved') {
     }, [user, tab])
   );
 
-  /**
-   * ✅ Hook returns:
-   */
   return {
     completedActivities,
     savedActivities,

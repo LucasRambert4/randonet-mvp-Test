@@ -1,5 +1,3 @@
-// src/screens/Explore/tests/getVisibleAndSorted.ts
-
 import { Trail } from '../../../services/trailsService';
 
 export function getVisibleAndSorted(

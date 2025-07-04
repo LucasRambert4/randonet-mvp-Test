@@ -1,4 +1,3 @@
-// PrivacyScreen.components.tsx
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, Switch } from 'react-native';
 import { DrawerActions } from '@react-navigation/native';

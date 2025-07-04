@@ -1,4 +1,3 @@
-// ActivityDetailScreen.styles.ts
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -13,19 +12,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#0d3a27', // or match your theme
+    backgroundColor: '#0d3a27',
   },
 
   topBarTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
   },
   activityTitle: {
     color: 'white',
@@ -38,15 +31,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
-  contentBox: {
-    backgroundColor: '#004d40',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    marginTop: -30,
-    padding: 20,
-    flex: 1,
-  },
-
   avatar: {
     width: 35,
     height: 35,

@@ -1,13 +1,11 @@
-// SaveActivityScreen.types.ts
-
 export type SaveActivityRouteParams = {
-  route: any[]; // GPS path
+  route: any[];
   distance: number;
   startTime: Date | null;
   endTime: Date;
   elevation: number;
   location: string;
   trailId?: string | null;
-  activityId?: string; // If editing
-  existingData?: any; // If editing
+  activityId?: string;
+  existingData?: any;
 };

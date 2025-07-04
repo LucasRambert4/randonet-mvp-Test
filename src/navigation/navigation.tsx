@@ -1,7 +1,3 @@
-// ====================
-// Navigation.tsx (force pop to root with key)
-// ====================
-
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

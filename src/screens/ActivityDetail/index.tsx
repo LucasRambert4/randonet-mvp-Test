@@ -1,5 +1,3 @@
-// src/screens/ActivityDetail/index.tsx
-
 import React from 'react';
 import {
   SafeAreaView,
@@ -33,7 +31,8 @@ export default function ActivityDetailScreen() {
     toggleSave,
     isSaved,
     confirmDelete,
-    avatarUrl, // ✅ From logic
+    avatarUrl,
+    ownerAvatarUrl,
   } = useActivityDetail();
 
   if (loading || !activityData || !ownerInfo) {
@@ -50,7 +49,6 @@ export default function ActivityDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* ✅ New reusable TopBar */}
       <TopBar
         title={t('activityDetail.title')}
         avatarUrl={avatarUrl}
@@ -84,7 +82,7 @@ export default function ActivityDetailScreen() {
         <View style={styles.contentBox}>
           <HeaderRow
             ownerInfo={ownerInfo}
-            avatarUrl={avatarUrl}
+            ownerAvatarUrl={ownerAvatarUrl}
             activityData={activityData}
             loc={loc}
             shareActivity={shareActivity}

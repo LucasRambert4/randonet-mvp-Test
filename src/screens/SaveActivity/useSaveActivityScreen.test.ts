@@ -1,6 +1,5 @@
 import { describe, it, expect, jest } from '@jest/globals';
 
-// ✅ One consistent storage bucket mock chain
 const remove = jest.fn();
 const upload = jest.fn();
 
@@ -16,9 +15,6 @@ global.alert = jest.fn();
 const navigation = { goBack: jest.fn() };
 const t = (key) => key;
 
-// ---------------------
-// Extracted helper
-// ---------------------
 async function _saveActivity({ user, isEditing, fileName }) {
   if (!user) {
     alert(
@@ -53,9 +49,6 @@ async function _saveActivity({ user, isEditing, fileName }) {
   navigation.goBack();
 }
 
-// ---------------------
-// Tests
-// ---------------------
 describe('useSaveActivityLogic Logic', () => {
   it('alerts and returns if user not logged in', async () => {
     await _saveActivity({
@@ -69,7 +62,7 @@ describe('useSaveActivityLogic Logic', () => {
   });
 
   it('uploads new activity and shows success', async () => {
-    upload.mockResolvedValueOnce({}); // ✅ returns an object with no error
+    upload.mockResolvedValueOnce({});
 
     await _saveActivity({
       user: { id: '123' },

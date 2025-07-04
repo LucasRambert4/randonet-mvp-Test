@@ -1,4 +1,3 @@
-//localTrails.ts
 export const LOCAL_TRAILS = [
   {
     id: 'trail-bois-boulogne-1',
@@ -174,5 +173,4 @@ export const LOCAL_TRAILS = [
       { lat: 48.774871, lon: 2.302778 },
     ],
   },
-  // And so on for trails 11–20 with same realism.
 ];

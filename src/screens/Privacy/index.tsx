@@ -1,4 +1,3 @@
-// index.tsx
 import React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,7 +19,6 @@ export default function PrivacyScreen() {
   } = usePrivacyScreen();
 
   return (
-    // Exclut le padding de safe area en haut
     <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <TopBar navigation={navigation} user={user} title={t('privacy.title')} />
       <View style={styles.section}>

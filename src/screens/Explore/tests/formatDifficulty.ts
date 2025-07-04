@@ -1,5 +1,3 @@
-// src/screens/Explore/tests/formatDifficulty.ts
-
 export function formatDifficulty(
   raw?: string,
   t: (key: string) => string = (k) => k

@@ -1,4 +1,3 @@
-// trailsService.ts
 import { LOCAL_TRAILS } from './localTrails';
 import { Trail } from './types';
 

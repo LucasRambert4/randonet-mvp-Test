@@ -1,12 +1,9 @@
-// src/screens/ActivityDetail/ActivityDetail.components.tsx
-
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, Entypo } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import styles from './ActivityDetailScreen.styles';
 
-// ✅ NEW: TopBar for back + title + drawer
 export const TopBar = ({
   title,
   avatarUrl,
@@ -31,10 +28,10 @@ export const TopBar = ({
   </View>
 );
 
-// ✅ Your existing HeaderRow for activity owner details
 export const HeaderRow = ({
   ownerInfo,
   avatarUrl,
+  ownerAvatarUrl,
   activityData,
   loc,
   shareActivity,
@@ -47,7 +44,7 @@ export const HeaderRow = ({
 }: any) => (
   <View style={styles.headerRow}>
     <View style={styles.userInfo}>
-      <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+      <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
       <View>
         <Text style={styles.username}>{ownerInfo.display_name}</Text>
         <Text style={styles.meta}>
@@ -100,7 +97,6 @@ export const HeaderRow = ({
   </View>
 );
 
-// ✅ Your existing StatsGrid for activity stats
 export const StatsGrid = ({ t, activityData }: any) => (
   <View style={styles.statsGrid}>
     <View style={styles.statBox}>
@@ -157,7 +153,6 @@ export const StatsGrid = ({ t, activityData }: any) => (
   </View>
 );
 
-// ✅ Your existing DescriptionBox for optional description
 export const DescriptionBox = ({ t, description }: any) =>
   description ? (
     <View style={{ marginTop: 20 }}>

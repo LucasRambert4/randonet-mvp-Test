@@ -47,7 +47,6 @@ describe('AuthProvider logic', () => {
       };
     });
 
-    // simulate what your effect does:
     supabase.auth.onAuthStateChange('SIGNED_IN', { user: { id: 'xyz' } });
 
     expect(supabase.auth.onAuthStateChange).toHaveBeenCalled();

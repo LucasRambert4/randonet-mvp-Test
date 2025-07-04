@@ -14,7 +14,6 @@ import MapView, { Polyline } from 'react-native-maps';
 import useTrailDetailsLogic from './TrailDetailsScreen.logic';
 import styles from './TrailDetailsScreen.styles';
 
-// ✅ New inline TopBar component — same style as ActivityDetail
 function TopBar({ navigation, user, title, onShare }: any) {
   return (
     <View style={styles.topBar}>
@@ -39,7 +38,7 @@ function TopBar({ navigation, user, title, onShare }: any) {
                 user?.avatar_url ||
                 'https://via.placeholder.com/40',
             }}
-            style={styles.avatar} // ✅ Make sure you have avatar style!
+            style={styles.avatar}
           />
         </TouchableOpacity>
       </View>
@@ -58,7 +57,7 @@ export default function TrailDetailsScreen() {
     isSaved,
     startActivity,
     firstNode,
-    user, // ✅ Make sure you provide user in logic!
+    user,
   } = useTrailDetailsLogic();
 
   if (loading) {

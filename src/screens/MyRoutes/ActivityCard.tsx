@@ -1,4 +1,3 @@
-// screens/MyRoutesScreen/ActivityCard.tsx
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';

@@ -21,7 +21,7 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 12,
-    backgroundColor: '#0d3a27', // same as container!
+    backgroundColor: '#0d3a27',
     zIndex: 10,
   },
   startText: {
