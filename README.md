@@ -87,7 +87,7 @@ You can run the app in **three ways**:
 ## 📂 Deliverables
 
 All project deliverables — including source code, assets, and documentation — are located in this repository:  
-**➡️ [Randonet MVP GitHub Repo](https://github.com/LucasRambert4/randonet-mvp-Test.git)**
+**➡️ [Randonet MVP GitHub Repo](https://github.com/LucasRambert4/randonet-mvp-Test/tree/main/livrable)**
 
 If you need to share the **compiled builds** or APKs, add them to a `deliverables/` folder and **update this README** with instructions to find or download them.
 
@@ -113,13 +113,6 @@ If something doesn’t work:
    npm start -- --clear
    ```
 3. Refer to the [Expo Docs](https://docs.expo.dev/) for help.
-
----
-
-## 🗂️ Support
-
-Need help?  
-➡️ Open an issue here: [GitHub Issues](https://github.com/LucasRambert4/YearProject/issues)
 
 ---
 
